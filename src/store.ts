@@ -4,7 +4,7 @@
  * Copyright (c) 2023 SoonKiMin
  */
 
-type AtomType<Value = unknown> = {
+export type AtomType<Value = unknown> = {
   state: Value;
   next: AtomType | null;
 };
@@ -31,13 +31,12 @@ export class Store implements IStore {
   }
 
   readAtomState<Value>(atom: AtomType<Value>): AtomType<Value> {
-    try {
-      const atomState = this.atomMap.get(atom) as AtomType<Value>;
-      if (!atomState) throw Error("This atom is empty");
-      return atomState;
-    } catch (err) {
-      throw Error("Failed to get Atom");
+    const atomState = this.atomMap.get(atom) as AtomType<Value>;
+    if (!atomState) {
+      this.createAtom(atom);
+      return atom;
     }
+    return atomState;
   }
 
   readAtomValue<Value>(atom: AtomType<Value>): Value {
@@ -52,15 +51,19 @@ export class Store implements IStore {
     this.listeners = this.listeners.filter((map) => !(map.has(atom) && map.get(atom) === listener));
   }
 
+  private render<Value>(atom: AtomType<Value>) {
+    this.listeners.forEach((map) => {
+      if (map.has(atom)) {
+        const func = map.get(atom);
+        func!();
+      }
+    });
+  }
+
   setAtomState<Value>(prevAtom: AtomType<Value>, newAtom: AtomType<Value>): void {
     try {
       this.atomMap.set(prevAtom, newAtom);
-      this.listeners.forEach((map) => {
-        if (map.has(prevAtom)) {
-          const func = map.get(prevAtom);
-          func!();
-        }
-      });
+      this.render(prevAtom);
     } catch (err) {
       throw Error("Failed to set atom");
     }
