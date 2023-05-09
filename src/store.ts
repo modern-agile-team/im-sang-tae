@@ -68,9 +68,3 @@ export class Store implements IStore {
 }
 
 export const defaultStore = new Store();
-
-const atom = defaultStore.createAtom("1");
-
-defaultStore.subscribeAtom(atom, () => {
-  console.log(atom);
-});
