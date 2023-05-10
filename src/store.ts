@@ -57,7 +57,6 @@ export class Store implements IStore {
     this.listeners.forEach((map) => {
       if (map.has(atom)) {
         const func = map.get(atom);
-        // htmlElement 함수 실행
         func!();
       }
     });
