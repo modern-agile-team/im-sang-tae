@@ -4,8 +4,7 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { defaultManager as stateManager } from "./stateManager";
-import { defaultStore as store } from "./store";
+import { defaultManager as stateManager, defaultStore as store } from "./stateManager";
 
 const Comp = document.createElement("div");
 const Button = document.createElement("button");
