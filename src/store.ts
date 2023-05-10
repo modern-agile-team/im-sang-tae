@@ -51,10 +51,11 @@ export class Store implements IStore {
     this.listeners = this.listeners.filter((map) => !(map.has(atom) && map.get(atom) === listener));
   }
 
-  private render<Value>(atom: AtomType<Value>) {
+  render<Value>(atom: AtomType<Value>) {
     this.listeners.forEach((map) => {
       if (map.has(atom)) {
         const func = map.get(atom);
+        // htmlElement 함수 실행
         func!();
       }
     });
