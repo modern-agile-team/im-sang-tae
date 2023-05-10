@@ -15,6 +15,15 @@ interface IStateManager {
 class StateManager implements IStateManager {
   private store = new Store();
 
+  private static instance: StateManager;
+
+  constructor() {
+    if (!StateManager.instance) {
+      StateManager.instance = this;
+    }
+    return StateManager.instance;
+  }
+
   getRSState<Value>(atom: AtomType<Value>) {
     return () => this.store.readAtomValue(atom);
   }

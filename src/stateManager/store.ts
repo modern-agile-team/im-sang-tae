@@ -24,7 +24,14 @@ export class Store implements IStore {
   private atomMap: WeakMap<AtomType, AtomType> = new WeakMap();
   private listeners: WeakMap<AtomType, () => void>[] = [];
 
-  constructor() {}
+  private static instance: Store;
+
+  constructor() {
+    if (!Store.instance) {
+      Store.instance = this;
+    }
+    return Store.instance;
+  }
 
   createAtom<Value>(state: Value): AtomType<Value> {
     const newAtom: AtomType<Value> = { state, next: null };
