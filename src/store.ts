@@ -16,6 +16,8 @@ interface IStore {
   setAtomState<Value>(prevAtom: AtomType<Value>, newAtom: AtomType<Value>): void;
   subscribeAtom<Value>(atom: AtomType<Value>, listener: () => void): void;
   unsubscribeAtom<Value>(atom: AtomType<Value>, listener: () => void): void;
+  render<Value>(atom: AtomType<Value>): void;
+  rerender<Value>(atom: AtomType<Value>, callback: () => void): void;
 }
 
 export class Store implements IStore {
@@ -59,6 +61,12 @@ export class Store implements IStore {
         func!();
       }
     });
+  }
+
+  rerender<Value>(atom: AtomType<Value>, callback: () => void) {
+    this.subscribeAtom(atom, callback);
+    this.render(atom);
+    this.unsubscribeAtom(atom, callback);
   }
 
   setAtomState<Value>(prevAtom: AtomType<Value>, newAtom: AtomType<Value>): void {
