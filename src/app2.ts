@@ -7,25 +7,24 @@
 import { numberAtom } from "./atom";
 import { defaultManager as stateManager, defaultStore as store } from "./stateManager";
 
-const Comp = document.createElement("div");
+const Comp = document.getElementById("wrapper");
+const Text = document.getElementById("text");
 const Button = document.createElement("button");
-const Text = document.createElement("span");
-
-Comp.id = "wrapper";
-Text.id = "text";
 
 const [getNumber, setNumber] = stateManager.getAndSetRSState(numberAtom);
 
-Button.innerText = "+1";
-Text.innerText = `${getNumber()}`;
+function changeText(component: HTMLElement, text: string) {
+  component.innerText = text;
+}
 
-document.body.appendChild(Comp);
-Comp.appendChild(Button);
-Comp.appendChild(Text);
+Comp?.appendChild(Button);
+
+Button.innerText = "+2";
 
 Button.onclick = () => {
-  setNumber(getNumber() + 1);
+  if (!Text) return;
+  setNumber(getNumber() + 2);
   store.rerender(numberAtom, () => {
-    Text.innerText = `${getNumber()}`;
+    changeText(Text, `${getNumber()}`);
   });
 };
