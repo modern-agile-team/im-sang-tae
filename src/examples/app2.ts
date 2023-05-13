@@ -5,14 +5,11 @@
  */
 
 import { numberAtom } from "./atom";
-import { defaultManager as stateManager } from "./stateManager";
+import { defaultManager as stateManager } from "../stateManager";
 
-const Comp = document.createElement("div");
+const Comp = document.getElementById("wrapper");
+const Text = document.getElementById("text");
 const Button = document.createElement("button");
-const Text = document.createElement("span");
-
-Comp.id = "wrapper";
-Text.id = "text";
 
 const [getNumber, setNumber] = stateManager.getAndSetRSState(numberAtom);
 
@@ -20,12 +17,9 @@ function changeText(component: HTMLElement, text: string) {
   component.innerText = text;
 }
 
-Button.innerText = "+1";
-Text.innerText = `${getNumber()}`;
+Comp?.appendChild(Button);
 
-document.body.appendChild(Comp);
-Comp.appendChild(Button);
-Comp.appendChild(Text);
+Button.innerText = "+2";
 
 stateManager.subscribe(numberAtom, () => {
   if (!Text) return;
@@ -33,5 +27,6 @@ stateManager.subscribe(numberAtom, () => {
 });
 
 Button.onclick = () => {
-  setNumber(getNumber() + 1);
+  if (!Text) return;
+  setNumber(getNumber() + 2);
 };
