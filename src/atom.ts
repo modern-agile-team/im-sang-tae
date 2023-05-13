@@ -4,6 +4,9 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { defaultStore as store } from "./stateManager";
+import { defaultStore } from "./stateManager";
 
-export const numberAtom = store.createAtom(1);
+export const numberAtom = defaultStore.createAtom({
+  key: "numberAtom",
+  state: 1,
+});

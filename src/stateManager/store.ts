@@ -5,26 +5,20 @@
  */
 
 export type AtomType<Value = unknown> = {
+  key: string;
   state: Value;
-  next: AtomType | null;
 };
 
 interface IStore {
   readAtomState<Value>(atom: AtomType<Value>): AtomType<Value>;
   readAtomValue<Value>(atom: AtomType<Value>): Value;
-  createAtom<Value>(state: Value): AtomType<Value>;
-  setAtomState<Value>(prevAtom: AtomType<Value>, newAtom: AtomType<Value>): void;
-  subscribeAtom<Value>(atom: AtomType<Value>, listener: () => void): void;
-  unsubscribeAtom<Value>(atom: AtomType<Value>, listener: () => void): void;
-  render<Value>(atom: AtomType<Value>): void;
-  rerender<Value>(atom: AtomType<Value>, callback: () => void): void;
+  createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
+  setAtomState<Value>(targetAtom: AtomType<Value>, newState: Value): void;
 }
 
 export class Store implements IStore {
-  private atomMap: WeakMap<AtomType, AtomType> = new WeakMap();
-  private listeners: WeakMap<AtomType, () => void>[] = [];
-
   private static instance: Store;
+  private atomMap: Map<string, AtomType> = new Map();
 
   constructor() {
     if (!Store.instance) {
@@ -33,18 +27,17 @@ export class Store implements IStore {
     return Store.instance;
   }
 
-  createAtom<Value>(state: Value): AtomType<Value> {
-    const newAtom: AtomType<Value> = { state, next: null };
-    this.atomMap.set(newAtom, newAtom);
+  createAtom<Value>(atom: AtomType<Value>): AtomType<Value> {
+    const newAtom: AtomType<Value> = { key: atom.key, state: atom.state };
+    this.atomMap.set(atom.key, newAtom);
     return newAtom;
   }
 
   readAtomState<Value>(atom: AtomType<Value>): AtomType<Value> {
-    const atomState = this.atomMap.get(atom) as AtomType<Value>;
-    if (!atomState) {
+    if (!this.atomMap.has(atom.key)) {
       this.createAtom(atom);
-      return atom;
     }
+    const atomState = this.atomMap.get(atom.key) as AtomType<Value>;
     return atomState;
   }
 
@@ -52,36 +45,9 @@ export class Store implements IStore {
     return this.readAtomState(atom).state as Value;
   }
 
-  subscribeAtom<Value>(atom: AtomType<Value>, listener: () => void): void {
-    this.listeners.push(new WeakMap().set(atom, listener));
-  }
-
-  unsubscribeAtom<Value>(atom: AtomType<Value>, listener: () => void): void {
-    this.listeners = this.listeners.filter((map) => !(map.has(atom) && map.get(atom) === listener));
-  }
-
-  render<Value>(atom: AtomType<Value>) {
-    this.listeners.forEach((map) => {
-      if (map.has(atom)) {
-        const func = map.get(atom);
-        func!();
-      }
-    });
-  }
-
-  rerender<Value>(atom: AtomType<Value>, callback: () => void) {
-    this.subscribeAtom(atom, callback);
-    this.render(atom);
-    this.unsubscribeAtom(atom, callback);
-  }
-
-  setAtomState<Value>(prevAtom: AtomType<Value>, newAtom: AtomType<Value>): void {
-    try {
-      this.atomMap.set(prevAtom, newAtom);
-      this.render(prevAtom);
-    } catch (err) {
-      throw Error("Failed to set atom");
-    }
+  setAtomState<Value>(targetAtom: AtomType<Value>, newState: Value): void {
+    const currentAtom = this.readAtomState(targetAtom);
+    this.atomMap.set(targetAtom.key, { ...currentAtom, state: newState });
   }
 }
 

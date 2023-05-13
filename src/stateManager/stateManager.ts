@@ -4,7 +4,7 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { AtomType, Store } from "./store";
+import { AtomType, Store, defaultStore } from "./store";
 
 interface IStateManager {
   getAndSetRSState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void];
@@ -13,14 +13,14 @@ interface IStateManager {
 }
 
 class StateManager implements IStateManager {
-  private store = new Store();
-
   private static instance: StateManager;
+  private store: Store;
 
-  constructor() {
+  constructor(store: Store) {
     if (!StateManager.instance) {
       StateManager.instance = this;
     }
+    this.store = store;
     return StateManager.instance;
   }
 
@@ -29,7 +29,9 @@ class StateManager implements IStateManager {
   }
 
   setRSState<Value>(atom: AtomType<Value>) {
-    return (newValue: Value) => this.store.setAtomState(atom, this.store.createAtom(newValue));
+    return (newValue: Value) => {
+      return this.store.setAtomState(atom, newValue);
+    };
   }
 
   getAndSetRSState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void] {
@@ -37,4 +39,4 @@ class StateManager implements IStateManager {
   }
 }
 
-export const defaultManager = new StateManager();
+export const defaultManager = new StateManager(defaultStore);
