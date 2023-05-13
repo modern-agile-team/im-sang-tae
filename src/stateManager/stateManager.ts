@@ -10,11 +10,13 @@ interface IStateManager {
   getAndSetRSState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void];
   getRSState<Value>(atom: AtomType<Value>): () => Value;
   setRSState<Value>(atom: AtomType<Value>): (newValue: Value) => void;
+  subscribe(atom: AtomType, callback: () => void): void;
 }
 
 class StateManager implements IStateManager {
   private static instance: StateManager;
   private store: Store;
+  private subscriptions: Map<string, (() => void)[]> = new Map();
 
   constructor(store: Store) {
     if (!StateManager.instance) {
@@ -30,12 +32,25 @@ class StateManager implements IStateManager {
 
   setRSState<Value>(atom: AtomType<Value>) {
     return (newValue: Value) => {
-      return this.store.setAtomState(atom, newValue);
+      this.store.setAtomState(atom, newValue);
+      this.render(atom);
     };
   }
 
   getAndSetRSState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void] {
     return [this.getRSState(atom), this.setRSState(atom)];
+  }
+
+  subscribe(atom: AtomType, callback: () => void) {
+    const existingSubscriptions = this.subscriptions.get(atom.key) || [];
+    this.subscriptions.set(atom.key, [...existingSubscriptions, callback]);
+  }
+
+  private render<Value>(atom: AtomType<Value>) {
+    const listeners = this.subscriptions.get(atom.key);
+    if (listeners) {
+      listeners.forEach((callback) => callback());
+    }
   }
 }
 

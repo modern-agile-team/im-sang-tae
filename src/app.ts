@@ -27,7 +27,11 @@ document.body.appendChild(Comp);
 Comp.appendChild(Button);
 Comp.appendChild(Text);
 
+stateManager.subscribe(numberAtom, () => {
+  if (!Text) return;
+  changeText(Text, `${getNumber()}`);
+});
+
 Button.onclick = () => {
   setNumber(getNumber() + 1);
-  changeText(Text, `${getNumber()}`);
 };

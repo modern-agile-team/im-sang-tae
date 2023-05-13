@@ -21,8 +21,12 @@ Comp?.appendChild(Button);
 
 Button.innerText = "+2";
 
+stateManager.subscribe(numberAtom, () => {
+  if (!Text) return;
+  changeText(Text, `${getNumber()}`);
+});
+
 Button.onclick = () => {
   if (!Text) return;
   setNumber(getNumber() + 2);
-  changeText(Text, `${getNumber()}`);
 };
