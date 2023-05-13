@@ -11,7 +11,7 @@ const Comp = document.getElementById("wrapper");
 const Text = document.getElementById("text");
 const Button = document.createElement("button");
 
-const [getNumber, setNumber] = stateManager.getAndSetRSState(numberAtom);
+const [getNumber, setNumber] = stateManager.atomState(numberAtom);
 
 function changeText(component: HTMLElement, text: string) {
   component.innerText = text;

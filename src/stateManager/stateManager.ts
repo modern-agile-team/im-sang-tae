@@ -7,9 +7,9 @@
 import { AtomType, Store, defaultStore } from "./store";
 
 interface IStateManager {
-  getAndSetRSState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void];
-  getRSState<Value>(atom: AtomType<Value>): () => Value;
-  setRSState<Value>(atom: AtomType<Value>): (newValue: Value) => void;
+  atomState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void];
+  atomValue<Value>(atom: AtomType<Value>): () => Value;
+  setAtomState<Value>(atom: AtomType<Value>): (newValue: Value) => void;
   subscribe(atom: AtomType, callback: () => void): void;
 }
 
@@ -26,19 +26,19 @@ class StateManager implements IStateManager {
     return StateManager.instance;
   }
 
-  getRSState<Value>(atom: AtomType<Value>) {
+  atomValue<Value>(atom: AtomType<Value>) {
     return () => this.store.readAtomValue(atom);
   }
 
-  setRSState<Value>(atom: AtomType<Value>) {
+  setAtomState<Value>(atom: AtomType<Value>) {
     return (newValue: Value) => {
       this.store.setAtomState(atom, newValue);
       this.render(atom);
     };
   }
 
-  getAndSetRSState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void] {
-    return [this.getRSState(atom), this.setRSState(atom)];
+  atomState<Value>(atom: AtomType<Value>): [() => Value, (newValue: Value) => void] {
+    return [this.atomValue(atom), this.setAtomState(atom)];
   }
 
   subscribe(atom: AtomType, callback: () => void) {

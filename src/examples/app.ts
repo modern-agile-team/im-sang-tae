@@ -14,7 +14,7 @@ const Text = document.createElement("span");
 Comp.id = "wrapper";
 Text.id = "text";
 
-const [getNumber, setNumber] = stateManager.getAndSetRSState(numberAtom);
+const [getNumber, setNumber] = stateManager.atomState(numberAtom);
 
 function changeText(component: HTMLElement, text: string) {
   component.innerText = text;
