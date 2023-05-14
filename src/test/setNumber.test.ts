@@ -1,7 +1,7 @@
 import { defaultStore as store } from "../stateManager";
 import { defaultManager as manager } from "../stateManager";
 
-const numberAtom = store.createAtom({ key: "numberAtom", state: 1 });
+const numberAtom = store.createAtom({ key: "numberAtom", initialState: 1 });
 const [getNumber, setNumber] = manager.atomState(numberAtom);
 
 describe("setNumber", () => {

@@ -6,7 +6,7 @@
 
 export type AtomType<Value = unknown> = {
   key: string;
-  state: Value;
+  initialState: Value;
 };
 
 export type SelectorType<Value = unknown> = {
@@ -43,7 +43,7 @@ export class Store implements IStore {
     if (this.atomMap.has(atom.key)) {
       throw Error(`atom that has ${atom.key} key already exist`);
     }
-    const newAtom: AtomType<Value> = { key: atom.key, state: atom.state };
+    const newAtom: AtomType<Value> = { key: atom.key, initialState: atom.initialState };
     this.atomMap.set(atom.key, newAtom);
     return newAtom;
   }
@@ -97,12 +97,12 @@ export class Store implements IStore {
   }
 
   readAtomValue<Value>(atom: AtomType<Value>): Value {
-    return this.readAtomState(atom).state as Value;
+    return this.readAtomState(atom).initialState as Value;
   }
 
   setAtomState<Value>(targetAtom: AtomType<Value>, newState: Value): void {
     const currentAtom = this.readAtomState(targetAtom);
-    this.atomMap.set(targetAtom.key, { ...currentAtom, state: newState });
+    this.atomMap.set(targetAtom.key, { ...currentAtom, initialState: newState });
   }
 }
 
