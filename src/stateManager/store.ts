@@ -33,6 +33,7 @@ interface IStore {
 export class Store implements IStore {
   private atomMap: AtomMapType = new Map();
   private selectorMap: SelectorMapType = new Map();
+  private selectorDependencies: Map<string, Set<string>> = new Map();
 
   createAtom<Value>(state: AtomType<Value>): AtomType<Value>;
   createAtom<Value>(state: SelectorType<Value>): SelectorType<Value>;
@@ -43,8 +44,13 @@ export class Store implements IStore {
       }
       const newSelector: SelectorType<Value> = { key: state.key, get: state.get };
 
-      const get = <Value>(state: AtomOrSelectorType<Value>) => {
-        return this.readAtomValue(state);
+      const get = <Value>(getterState: AtomOrSelectorType<Value>) => {
+        // Track selector dependencies
+        const dependency = this.selectorDependencies.get(getterState.key) || new Set();
+        dependency.add(state.key);
+        this.selectorDependencies.set(getterState.key, dependency);
+
+        return this.readAtomValue(getterState);
       };
 
       this.selectorMap.set(state.key, { ...newSelector, state: state.get({ get }) });
@@ -83,9 +89,9 @@ export class Store implements IStore {
 
   readAtomValue<Value>(state: AtomOrSelectorType<Value>): Value {
     if ("get" in state) {
-      return this.readAtomState(state).state as Value;
+      return this.readAtomState(state).state;
     } else {
-      return this.readAtomState(state).state as Value;
+      return this.readAtomState(state).state;
     }
   }
 
@@ -96,6 +102,15 @@ export class Store implements IStore {
     } else {
       const currentAtom = this.readAtomState(targetState);
       this.atomMap.set(targetState.key, { ...currentAtom, state: newState });
+    }
+    const dependencies = this.selectorDependencies.get(targetState.key);
+    if (dependencies) {
+      dependencies.forEach((key) => {
+        const dependent = this.selectorMap.get(key);
+        if (dependent) {
+          dependent.state = dependent.get({ get: this.readAtomValue.bind(this) });
+        }
+      });
     }
   }
 }
