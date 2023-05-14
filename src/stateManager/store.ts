@@ -7,6 +7,11 @@
 type AtomMapType = Map<string, AtomType & { state: any }>;
 type SelectorMapType = Map<string, SelectorType & { state: any }>;
 
+type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
+type SelectorWithStateType<Value> = SelectorType<Value> & { state: Value };
+
+export type AtomOrSelectorType<Value = unknown> = AtomType<Value> | SelectorType<Value>;
+
 export type AtomType<Value = unknown> = {
   key: string;
   initialState: Value;
@@ -14,85 +19,84 @@ export type AtomType<Value = unknown> = {
 
 export type SelectorType<Value = unknown> = {
   key: string;
-  get: ({ get }: { get: <Value>(atom: AtomType<Value>) => Value }) => Value;
+  get: ({ get }: { get: <Value>(state: AtomOrSelectorType<Value>) => Value }) => Value;
 };
 
 interface IStore {
   /** atom relative methods */
-  createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
-  readAtomState<Value>(atom: AtomType<Value>): AtomType<Value>;
-  readAtomValue<Value>(atom: AtomType<Value>): Value;
-  setAtomState<Value>(targetAtom: AtomType<Value>, newState: Value): void;
-
-  /** selector relative methods */
-  createSelector<Value>(selector: SelectorType<Value>): SelectorType<Value>;
-  readSelectorState<Value>(selector: SelectorType<Value>): SelectorType<Value>;
-  readSelectorValue<Value>(selector: SelectorType<Value>): Value;
-  setSelectorState<Value>(targetSelector: SelectorType<Value>, newState: Value): void;
+  createAtom<Value>(state: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  readAtomState<Value>(state: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  readAtomValue<Value>(state: AtomOrSelectorType<Value>): Value;
+  setAtomState<Value>(targetState: AtomOrSelectorType<Value>, newState: Value): void;
 }
 
 export class Store implements IStore {
   private atomMap: AtomMapType = new Map();
   private selectorMap: SelectorMapType = new Map();
 
-  createAtom<Value>(atom: AtomType<Value>): AtomType<Value> {
-    if (this.atomMap.has(atom.key)) {
-      throw Error(`atom that has ${atom.key} key already exist`);
+  createAtom<Value>(state: AtomType<Value>): AtomType<Value>;
+  createAtom<Value>(state: SelectorType<Value>): SelectorType<Value>;
+  createAtom<Value>(state: AtomOrSelectorType<Value>): AtomOrSelectorType<Value> {
+    if ("get" in state) {
+      if (this.selectorMap.has(state.key)) {
+        throw Error(`selector that has ${state.key} key already exist`);
+      }
+      const newSelector: SelectorType<Value> = { key: state.key, get: state.get };
+
+      const get = <Value>(state: AtomOrSelectorType<Value>) => {
+        return this.readAtomValue(state);
+      };
+
+      this.selectorMap.set(state.key, { ...newSelector, state: state.get({ get }) });
+
+      return newSelector;
+    } else {
+      if (this.atomMap.has(state.key)) {
+        throw Error(`atom that has ${state.key} key already exist`);
+      }
+
+      const newAtom: AtomType<Value> = { key: state.key, initialState: state.initialState };
+      this.atomMap.set(state.key, { ...newAtom, state: state.initialState });
+      return newAtom;
     }
-    const newAtom: AtomType<Value> = { key: atom.key, initialState: atom.initialState };
-    this.atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
-    return newAtom;
   }
 
-  createSelector<Value>(selector: SelectorType<Value>): SelectorType<Value> {
-    if (this.selectorMap.has(selector.key)) {
-      throw Error(`selector that has ${selector.key} key already exist`);
+  readAtomState<Value>(state: AtomType<Value>): AtomWithStateType<Value>;
+  readAtomState<Value>(state: SelectorType<Value>): SelectorWithStateType<Value>;
+  readAtomState<Value>(state: AtomOrSelectorType<Value>): AtomWithStateType<Value> | SelectorWithStateType<Value> {
+    if ("get" in state) {
+      if (!this.selectorMap.has(state.key)) {
+        throw Error(`selector that has ${state.key} key does not exist`);
+      }
+      const selectorState = this.selectorMap.get(state.key) as SelectorWithStateType<Value>;
+
+      return selectorState;
+    } else {
+      if (!this.atomMap.has(state.key)) {
+        throw Error(`atom that has ${state.key} key does not exist`);
+      }
+      const atomState = this.atomMap.get(state.key) as AtomWithStateType<Value>;
+
+      return atomState;
     }
-    const newSelector: SelectorType<Value> = { key: selector.key, get: selector.get };
-
-    const get = <Value>(atom: AtomType<Value>) => {
-      return this.readAtomValue(atom);
-    };
-
-    this.selectorMap.set(selector.key, { ...newSelector, state: selector.get({ get }) });
-
-    return newSelector;
   }
 
-  readAtomState<Value>(atom: AtomType<Value>): AtomType<Value> & { state: Value } {
-    if (!this.atomMap.has(atom.key)) {
-      throw Error(`atom that has ${atom.key} key does not exist`);
+  readAtomValue<Value>(state: AtomOrSelectorType<Value>): Value {
+    if ("get" in state) {
+      return this.readAtomState(state).state as Value;
+    } else {
+      return this.readAtomState(state).state as Value;
     }
-    const atomState = this.atomMap.get(atom.key) as AtomType<Value> & { state: Value };
-
-    return atomState;
   }
 
-  readSelectorState<Value>(selector: SelectorType<Value>): SelectorType<Value> & { state: Value } {
-    if (!this.selectorMap.has(selector.key)) {
-      throw Error(`selector that has ${selector.key} key does not exist`);
+  setAtomState<Value>(targetState: AtomOrSelectorType<Value>, newState: Value): void {
+    if ("get" in targetState) {
+      const currentAtom = this.readAtomState(targetState);
+      this.selectorMap.set(targetState.key, { ...currentAtom, state: newState });
+    } else {
+      const currentAtom = this.readAtomState(targetState);
+      this.atomMap.set(targetState.key, { ...currentAtom, state: newState });
     }
-    const selectorState = this.selectorMap.get(selector.key) as SelectorType<Value> & { state: Value };
-
-    return selectorState;
-  }
-
-  readAtomValue<Value>(atom: AtomType<Value>): Value {
-    return this.readAtomState(atom).state as Value;
-  }
-
-  readSelectorValue<Value>(selector: SelectorType<Value>): Value {
-    return this.readSelectorState(selector).state;
-  }
-
-  setAtomState<Value>(targetAtom: AtomType<Value>, newState: Value): void {
-    const currentAtom = this.readAtomState(targetAtom);
-    this.atomMap.set(targetAtom.key, { ...currentAtom, state: newState });
-  }
-
-  setSelectorState<Value>(targetSelector: SelectorType<Value>, newState: Value): void {
-    const currentSelector = this.readSelectorState(targetSelector);
-    this.selectorMap.set(targetSelector.key, { ...currentSelector, state: newState });
   }
 }
 
