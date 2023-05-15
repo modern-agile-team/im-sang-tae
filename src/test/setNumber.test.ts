@@ -1,8 +1,7 @@
-import { defaultStore as store } from "../stateManager";
-import { defaultManager as manager } from "../stateManager";
+import { defaultStateManger, defaultStore } from "../stateManager";
 
-const numberAtom = store.createAtom({ key: "numberAtom", initialState: 1 });
-const [getNumber, setNumber] = manager.atomState(numberAtom);
+const numberAtom = defaultStore.createAtom({ key: "numberAtom", initialState: 1 });
+const [getNumber, setNumber] = defaultStateManger.atomState(numberAtom);
 
 describe("setNumber", () => {
   afterEach(() => {

@@ -4,8 +4,8 @@
  * Copyright (c) 2023 Your Company
  */
 
+import { defaultStateManger } from "../stateManager";
 import { numberAtom } from "./atom";
-import { defaultManager as stateManager } from "../stateManager";
 
 const Comp = document.createElement("div");
 const Button = document.createElement("button");
@@ -14,7 +14,7 @@ const Text = document.createElement("span");
 Comp.id = "wrapper";
 Text.id = "text";
 
-const [getNumber, setNumber] = stateManager.atomState(numberAtom);
+const [getNumber, setNumber] = defaultStateManger.atomState(numberAtom);
 
 function changeText(component: HTMLElement, text: string) {
   component.innerText = text;
@@ -27,7 +27,7 @@ document.body.appendChild(Comp);
 Comp.appendChild(Button);
 Comp.appendChild(Text);
 
-stateManager.subscribe(numberAtom, () => {
+defaultStateManger.subscribe(numberAtom, () => {
   if (!Text) return;
   changeText(Text, `${getNumber()}`);
 });

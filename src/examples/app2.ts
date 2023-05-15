@@ -4,8 +4,8 @@
  * Copyright (c) 2023 Your Company
  */
 
+import { defaultStateManger } from "../stateManager";
 import { numberAtom, numberSelector } from "./atom";
-import { defaultManager as stateManager } from "../stateManager";
 
 const Comp = document.getElementById("wrapper");
 const Text = document.getElementById("text");
@@ -13,8 +13,8 @@ const Button = document.createElement("button");
 
 const Text2 = document.createElement("span");
 
-const getNumber = stateManager.atomValue(numberAtom);
-const [getNumberS, setNumberS] = stateManager.atomState(numberSelector);
+const getNumber = defaultStateManger.atomValue(numberAtom);
+const [getNumberS, setNumberS] = defaultStateManger.atomState(numberSelector);
 
 function changeText(component: HTMLElement, text: string) {
   component.innerText = text;
@@ -27,13 +27,13 @@ Comp?.appendChild(Text2);
 
 Button.innerText = "+2";
 
-stateManager.subscribe(numberAtom, () => {
+defaultStateManger.subscribe(numberAtom, () => {
   if (!Text) return;
   changeText(Text, `${getNumber()}`);
   changeText(Text2, `${getNumberS()}`);
 });
 
-stateManager.subscribe(numberSelector, () => {
+defaultStateManger.subscribe(numberSelector, () => {
   if (!Text) return;
   changeText(Text2, `${getNumberS()}`);
 });

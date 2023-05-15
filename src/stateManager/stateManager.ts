@@ -4,49 +4,43 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { AtomOrSelectorType, Store, defaultStore } from "./store";
+import { AtomOrSelectorType, createStore, defaultStore } from "./store";
 
-interface IStateManager {
-  atomState<Value>(atom: AtomOrSelectorType<Value>): [() => Value, (newValue: Value) => void];
-  atomValue<Value>(atom: AtomOrSelectorType<Value>): () => Value;
-  setAtomState<Value>(atom: AtomOrSelectorType<Value>): (newValue: Value) => void;
-  subscribe(atom: AtomOrSelectorType, callback: () => void): void;
-}
+export function createStateManager(store: ReturnType<typeof createStore>) {
+  const subscriptions: Map<string, (() => void)[]> = new Map();
 
-class StateManager implements IStateManager {
-  private store: Store;
-  private subscriptions: Map<string, (() => void)[]> = new Map();
-
-  constructor(store: Store) {
-    this.store = store;
+  function atomValue<Value>(atom: AtomOrSelectorType<Value>) {
+    return () => store.readAtomValue(atom);
   }
 
-  atomValue<Value>(atom: AtomOrSelectorType<Value>) {
-    return () => this.store.readAtomValue(atom);
-  }
-
-  setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
+  function setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     return (newValue: Value) => {
-      this.store.setAtomState(atom, newValue);
-      this.render(atom);
+      store.setAtom(atom, newValue);
+      render(atom);
     };
   }
 
-  atomState<Value>(atom: AtomOrSelectorType<Value>): [() => Value, (newValue: Value) => void] {
-    return [this.atomValue(atom), this.setAtomState(atom)];
+  function atomState<Value>(atom: AtomOrSelectorType<Value>): [() => Value, (newValue: Value) => void] {
+    return [atomValue(atom), setAtomState(atom)];
   }
 
-  subscribe(atom: AtomOrSelectorType, callback: () => void) {
-    const existingSubscriptions = this.subscriptions.get(atom.key) || [];
-    this.subscriptions.set(atom.key, [...existingSubscriptions, callback]);
+  function subscribe(atom: AtomOrSelectorType, callback: () => void) {
+    const existingSubscriptions = subscriptions.get(atom.key) || [];
+    subscriptions.set(atom.key, [...existingSubscriptions, callback]);
   }
 
-  private render<Value>(atom: AtomOrSelectorType<Value>) {
-    const listeners = this.subscriptions.get(atom.key);
+  function render<Value>(atom: AtomOrSelectorType<Value>) {
+    const listeners = subscriptions.get(atom.key);
     if (listeners) {
       listeners.forEach((callback) => callback());
     }
   }
+
+  return {
+    atomState,
+    atomValue,
+    subscribe,
+  };
 }
 
-export const defaultManager = new StateManager(defaultStore);
+export const defaultStateManger = createStateManager(defaultStore);
