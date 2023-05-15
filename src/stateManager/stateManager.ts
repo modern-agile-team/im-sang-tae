@@ -4,9 +4,9 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { AtomOrSelectorType, createStore, defaultStore } from "./store";
+import { AtomOrSelectorType, Store, defaultStore } from "./store";
 
-export function createStateManager(store: ReturnType<typeof createStore>) {
+export function createStateManager(store: Store) {
   const subscriptions: Map<string, (() => void)[]> = new Map();
 
   function atomValue<Value>(atom: AtomOrSelectorType<Value>) {
@@ -15,7 +15,7 @@ export function createStateManager(store: ReturnType<typeof createStore>) {
 
   function setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     return (newValue: Value) => {
-      store.setAtom(atom, newValue);
+      store.setAtomState(atom, newValue);
       render(atom);
     };
   }

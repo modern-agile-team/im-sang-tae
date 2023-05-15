@@ -22,7 +22,14 @@ export type SelectorType<Value = any> = {
   get: ({ get }: { get: <Value>(atom: AtomOrSelectorType<Value>) => Value }) => Value;
 };
 
-export function createStore() {
+export interface Store {
+  createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  readAtomState<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  readAtomValue<Value>(atom: AtomOrSelectorType<Value>): Value;
+  setAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
+}
+
+export function createStore(): Store {
   const atomMap: AtomMapType = new Map();
   const selectorMap: SelectorMapType = new Map();
   const selectorDependencies: Map<string, Set<string>> = new Map();
@@ -45,6 +52,18 @@ export function createStore() {
     const newSelector: SelectorType<Value> = { key: atom.key, get: atom.get };
     selectorMap.set(atom.key, { ...newSelector, state: atom.get({ get }) });
     return newSelector;
+  }
+
+  function updateDependencies<Value>(atom: AtomOrSelectorType<Value>) {
+    const dependencies = selectorDependencies.get(atom.key);
+    if (dependencies) {
+      dependencies.forEach((key) => {
+        const dependent = selectorMap.get(key);
+        if (dependent) {
+          dependent.state = dependent.get({ get: readAtomValue });
+        }
+      });
+    }
   }
 
   function createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
@@ -89,19 +108,7 @@ export function createStore() {
     }
   }
 
-  function updateDependencies<Value>(atom: AtomOrSelectorType<Value>) {
-    const dependencies = selectorDependencies.get(atom.key);
-    if (dependencies) {
-      dependencies.forEach((key) => {
-        const dependent = selectorMap.get(key);
-        if (dependent) {
-          dependent.state = dependent.get({ get: readAtomValue });
-        }
-      });
-    }
-  }
-
-  function setAtom<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void {
+  function setAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void {
     if ("get" in targetAtom) {
       const currentAtom = readAtomState(targetAtom);
       selectorMap.set(targetAtom.key, { ...currentAtom, state: newState });
@@ -116,8 +123,8 @@ export function createStore() {
     createAtom,
     readAtomState,
     readAtomValue,
-    setAtom,
+    setAtomState,
   };
 }
 
-export const defaultStore: ReturnType<typeof createStore> = createStore();
+export const defaultStore: Store = createStore();
