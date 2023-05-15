@@ -4,7 +4,9 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { defaultStore } from "../stateManager";
+import { getDefaultStore } from "../stateManager";
+
+const defaultStore = getDefaultStore();
 
 export const numberAtom = defaultStore.createAtom({
   key: "numberAtom",

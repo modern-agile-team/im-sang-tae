@@ -10,24 +10,26 @@ type SelectorMapType = Map<string, SelectorType & { state: any }>;
 type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
 type SelectorWithStateType<Value> = SelectorType<Value> & { state: Value };
 
-export type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
+type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
 
-export type AtomType<Value = any> = {
+type AtomType<Value = any> = {
   key: string;
   initialState: Value;
 };
 
-export type SelectorType<Value = any> = {
+type SelectorType<Value = any> = {
   key: string;
   get: ({ get }: { get: <Value>(atom: AtomOrSelectorType<Value>) => Value }) => Value;
 };
 
-export interface Store {
+interface Store {
   createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
   readAtomState<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
   readAtomValue<Value>(atom: AtomOrSelectorType<Value>): Value;
-  setAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
+  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
 }
+
+export type { AtomOrSelectorType, AtomType, Store, SelectorType };
 
 export function createStore(): Store {
   const atomMap: AtomMapType = new Map();
@@ -108,7 +110,7 @@ export function createStore(): Store {
     }
   }
 
-  function setAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void {
+  function writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void {
     if ("get" in targetAtom) {
       const currentAtom = readAtomState(targetAtom);
       selectorMap.set(targetAtom.key, { ...currentAtom, state: newState });
@@ -123,8 +125,15 @@ export function createStore(): Store {
     createAtom,
     readAtomState,
     readAtomValue,
-    setAtomState,
+    writeAtomState,
   };
 }
 
-export const defaultStore: Store = createStore();
+let defaultStore: Store | undefined;
+
+export const getDefaultStore = () => {
+  if (!defaultStore) {
+    defaultStore = createStore();
+  }
+  return defaultStore;
+};

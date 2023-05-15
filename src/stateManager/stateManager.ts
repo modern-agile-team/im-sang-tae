@@ -4,7 +4,9 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { AtomOrSelectorType, Store, defaultStore } from "./store";
+import type { AtomOrSelectorType, Store } from "./store";
+
+import { getDefaultStore } from "./store";
 
 export function createStateManager(store: Store) {
   const subscriptions: Map<string, (() => void)[]> = new Map();
@@ -15,7 +17,7 @@ export function createStateManager(store: Store) {
 
   function setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     return (newValue: Value) => {
-      store.setAtomState(atom, newValue);
+      store.writeAtomState(atom, newValue);
       render(atom);
     };
   }
@@ -43,4 +45,4 @@ export function createStateManager(store: Store) {
   };
 }
 
-export const defaultStateManger = createStateManager(defaultStore);
+export const defaultStateManger = createStateManager(getDefaultStore());

@@ -1,4 +1,6 @@
-import { defaultStateManger, defaultStore } from "../stateManager";
+import { defaultStateManger, getDefaultStore } from "../stateManager";
+
+const defaultStore = getDefaultStore();
 
 const numberAtom = defaultStore.createAtom({ key: "numberAtom", initialState: 1 });
 const [getNumber, setNumber] = defaultStateManger.atomState(numberAtom);
