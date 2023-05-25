@@ -4,13 +4,7 @@
  * Copyright (c) 2023 SoonKiMin
  */
 
-type AtomMapType = Map<string, AtomType & { state: any }>;
-type SelectorMapType = Map<string, SelectorType & { state: any }>;
-
-type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
-type SelectorWithStateType<Value> = SelectorType<Value> & { state: Value };
-
-type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
+type getter = <Value>(atom: AtomOrSelectorType<Value>) => Value;
 
 type AtomType<Value = any> = {
   key: string;
@@ -19,13 +13,38 @@ type AtomType<Value = any> = {
 
 type SelectorType<Value = any> = {
   key: string;
-  get: ({ get }: { get: <Value>(atom: AtomOrSelectorType<Value>) => Value }) => Value;
+  get: ({ get }: { get: getter }) => Value;
 };
 
+type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
+
+type AtomMapType = Map<string, AtomType & { state: any }>;
+type SelectorMapType = Map<string, SelectorType & { state: any }>;
+
+type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
+type SelectorWithStateType<Value> = SelectorType<Value> & { state: Value };
+
 interface Store {
+  /**
+   * receive atom and store in the atomMap.
+   * @param atom
+   */
   createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  /**
+   * receive atom and read itself.
+   * @param atom
+   */
   readAtomState<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  /**
+   * receive atom and read it's value.
+   * @param atom
+   */
   readAtomValue<Value>(atom: AtomOrSelectorType<Value>): Value;
+  /**
+   * update targeted atom's state.
+   * @param targetAtom
+   * @param newState
+   */
   writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
 }
 
@@ -96,6 +115,7 @@ export function createStore(): Store {
       if (!atomMap.has(atom.key)) {
         throw Error(`atom that has ${atom.key} key does not exist`);
       }
+
       const atomState = atomMap.get(atom.key) as AtomWithStateType<Value>;
 
       return atomState;
