@@ -35,3 +35,10 @@ tsconfig.json
 # git
 .gitignore
 .github
+
+# examples
+examples
+
+#test
+test
+jest.config.js
