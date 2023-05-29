@@ -3,21 +3,21 @@ const webpack = require("webpack");
 
 module.exports = {
   mode: "production",
-  entry: ["./app.ts", "./app2.ts", "./atom.ts"],
+  entry: ["./src/app.ts", "./src/app2.ts", "./src/atom.ts"],
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
   },
   resolve: {
-    // <-- 추가한 부분
     extensions: [".ts", ".js"],
   },
   module: {
+    strictExportPresence: true,
     rules: [
+      { parser: { requireEnsure: false } },
       {
-        test: /\.ts$/,
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
         use: "ts-loader",
-        exclude: /node_modules/,
       },
     ],
   },
