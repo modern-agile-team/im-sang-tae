@@ -1,7 +1,7 @@
-import { AtomOrSelectorType, AtomType } from "../../types/store";
+import type { AtomOrSelectorType } from "../../types";
 
 export function atomWithStorage<Value = any>(
-  atom: AtomOrSelectorType | AtomType,
+  atom: AtomOrSelectorType,
   storageType: "local" | "session" = "local"
 ): void {
   //Todo : Selector일 경우 함수 따와서 state 저장

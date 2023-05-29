@@ -4,9 +4,9 @@
  * Copyright (c) 2023 Your Company
  */
 
-import type { AtomOrSelectorType, Store } from "../store";
-
 import { getDefaultStore } from "../store";
+
+import type { AtomOrSelectorType, Store } from "../types";
 
 export function createStateManager(store: Store) {
   const subscriptions: Map<string, (() => void)[]> = new Map();
