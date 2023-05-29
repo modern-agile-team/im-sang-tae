@@ -1,8 +1,9 @@
 {
-  "name": "global-status-manager",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "sang-tae",
+  "version": "0.1.0",
+  "description": "state management library that are not dependent on the framework",
+  "main": "dist/main.js",
+  "private": false,
   "scripts": {
     "build": "webpack",
     "start": "webpack serve",
@@ -12,11 +13,18 @@
     "type": "git",
     "url": "git+https://github.com/soonki-98/global-status-manager.git"
   },
-  "keywords": [],
+  "keywords": [
+    "state",
+    "global",
+    "manager",
+    "javascript",
+    "frontend"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/soonki-98/global-status-manager/issues"
+    "url": "https://github.com/soonki-98/global-status-manager/issues",
+    "email": "alstnsrl98@gmail.com"
   },
   "homepage": "https://github.com/soonki-98/global-status-manager#readme",
   "dependencies": {
