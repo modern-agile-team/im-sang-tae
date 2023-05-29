@@ -1,7 +1,8 @@
 /*
- * Created on Wed May 10 2023
+ * Created on Mon May 29 2023
  *
  * Copyright (c) 2023 Your Company
  */
 
+export * from "./store";
 export * from "./stateManager";
