@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/soonki-98/global-status-manager.git"
+    "url": "git+https://github.com/modern-agile-team/im-sang-tae.git"
   },
   "keywords": [
     "state",
@@ -26,10 +26,10 @@
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/soonki-98/global-status-manager/issues",
+    "url": "https://github.com/modern-agile-team/im-sang-tae/issues",
     "email": "alstnsrl98@gmail.com"
   },
-  "homepage": "https://github.com/soonki-98/global-status-manager#readme",
+  "homepage": "https://github.com/modern-agile-team/im-sang-tae#readme",
   "dependencies": {
     "@types/node": "^20.1.1",
     "ts-node": "^10.9.1",
