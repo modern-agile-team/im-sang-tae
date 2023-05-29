@@ -4,7 +4,7 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { defaultStateManger } from "../stateManager";
+import { defaultStateManger } from "../src/stateManager";
 import { numberAtom, numberSelector } from "./atom";
 
 const Comp = document.getElementById("wrapper");

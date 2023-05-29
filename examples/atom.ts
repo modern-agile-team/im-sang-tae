@@ -4,7 +4,7 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { getDefaultStore } from "../stateManager";
+import { getDefaultStore } from "../src/stateManager";
 
 const defaultStore = getDefaultStore();
 
