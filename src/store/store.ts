@@ -5,40 +5,15 @@
  */
 
 import type {
+  AtomMapType,
   AtomOrSelectorType,
   AtomType,
+  AtomWithStateType,
   SelectorMapType,
   SelectorType,
-  AtomMapType,
-  AtomWithStateType,
   SelectorWithStateType,
+  Store,
 } from "../types";
-
-interface Store {
-  /**
-   * receive atom and store in the atomMap.
-   * @param atom
-   */
-  createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
-  /**
-   * receive atom and read itself.
-   * @param atom
-   */
-  readAtomState<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
-  /**
-   * receive atom and read it's value.
-   * @param atom
-   */
-  readAtomValue<Value>(atom: AtomOrSelectorType<Value>): Value;
-  /**
-   * update targeted atom's state.
-   * @param targetAtom
-   * @param newState
-   */
-  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
-}
-
-export type { AtomOrSelectorType, AtomType, Store, SelectorType };
 
 export function createStore(): Store {
   const atomMap: AtomMapType = new Map();

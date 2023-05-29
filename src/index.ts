@@ -6,3 +6,5 @@
 
 export * from "./store";
 export * from "./stateManager";
+
+export type * from "./types";
