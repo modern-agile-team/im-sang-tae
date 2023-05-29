@@ -37,7 +37,7 @@ tsconfig.json
 .github
 
 # examples
-examples
+examples/
 
 #test
 test

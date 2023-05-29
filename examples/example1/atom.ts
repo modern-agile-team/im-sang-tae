@@ -4,7 +4,7 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { getDefaultStore } from "../src";
+import { getDefaultStore } from "im-sang-tae";
 
 const defaultStore = getDefaultStore();
 

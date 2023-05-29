@@ -1,15 +1,12 @@
 const path = require("path");
 const webpack = require("webpack");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   mode: "production",
-  entry: "./src/index.ts",
+  entry: ["./app.ts", "./app2.ts", "./atom.ts"],
   output: {
-    filename: "index.js",
+    filename: "main.js",
     path: path.resolve(__dirname, "dist"),
-    libraryTarget: "umd",
-    globalObject: "this",
   },
   resolve: {
     // <-- 추가한 부분
@@ -24,7 +21,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [new webpack.ProgressPlugin(), new CleanWebpackPlugin()],
+  plugins: [new webpack.ProgressPlugin()],
   devServer: {
     static: {
       directory: path.join(__dirname, "dist"),

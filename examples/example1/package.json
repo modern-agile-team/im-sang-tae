@@ -1,0 +1,16 @@
+{
+  "name": "example1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "im-sang-tae": "^0.1.7"
+  }
+}
