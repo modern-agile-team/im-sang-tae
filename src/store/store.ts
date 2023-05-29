@@ -4,7 +4,7 @@
  * Copyright (c) 2023 SoonKiMin
  */
 
-import {
+import type {
   AtomOrSelectorType,
   AtomType,
   SelectorMapType,
@@ -12,7 +12,7 @@ import {
   AtomMapType,
   AtomWithStateType,
   SelectorWithStateType,
-} from "../types/store";
+} from "../types";
 
 interface Store {
   /**
