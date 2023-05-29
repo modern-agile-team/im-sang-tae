@@ -1,4 +1,4 @@
-import { defaultStateManger, getDefaultStore } from "../index";
+import { defaultStateManger, getDefaultStore } from "../src/index";
 
 const defaultStore = getDefaultStore();
 
