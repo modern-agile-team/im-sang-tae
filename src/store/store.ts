@@ -4,25 +4,15 @@
  * Copyright (c) 2023 SoonKiMin
  */
 
-type getter = <Value>(atom: AtomOrSelectorType<Value>) => Value;
-
-type AtomType<Value = any> = {
-  key: string;
-  initialState: Value;
-};
-
-type SelectorType<Value = any> = {
-  key: string;
-  get: ({ get }: { get: getter }) => Value;
-};
-
-type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
-
-type AtomMapType = Map<string, AtomType & { state: any }>;
-type SelectorMapType = Map<string, SelectorType & { state: any }>;
-
-type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
-type SelectorWithStateType<Value> = SelectorType<Value> & { state: Value };
+import type {
+  AtomOrSelectorType,
+  AtomType,
+  SelectorMapType,
+  SelectorType,
+  AtomMapType,
+  AtomWithStateType,
+  SelectorWithStateType,
+} from "../types";
 
 interface Store {
   /**
@@ -56,7 +46,10 @@ export function createStore(): Store {
   const selectorDependencies: Map<string, Set<string>> = new Map();
 
   function createNewAtom<Value>(atom: AtomType<Value>) {
-    const newAtom: AtomType<Value> = { key: atom.key, initialState: atom.initialState };
+    const newAtom: AtomType<Value> = {
+      key: atom.key,
+      initialState: atom.initialState,
+    };
     atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
     return newAtom;
   }
