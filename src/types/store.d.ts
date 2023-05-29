@@ -10,9 +10,7 @@ export type SelectorType<Value = any> = {
   get: ({ get }: { get: getter }) => Value;
 };
 
-export type AtomOrSelectorType<Value = any> =
-  | AtomType<Value>
-  | SelectorType<Value>;
+export type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
 
 export type AtomMapType = Map<string, AtomType & { state: any }>;
 export type SelectorMapType = Map<string, SelectorType & { state: any }>;
