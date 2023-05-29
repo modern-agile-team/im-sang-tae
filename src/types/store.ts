@@ -1,8 +1,8 @@
-/*
- * Created on Tue May 30 2023
- *
- * Copyright (c) 2023 Your Company
- */
+/**
+ * Author: SoonKi Min (alstnsrl98@gmail.com)
+ * License: MIT
+ * Created On Tue May 30 2023
+ **/
 
 export type getter = <Value>(atom: AtomOrSelectorType<Value>) => Value;
 

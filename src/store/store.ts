@@ -1,8 +1,8 @@
-/*
- * Created on Tue May 09 2023
- *
- * Copyright (c) 2023 SoonKiMin
- */
+/**
+ * Author: SoonKi Min (alstnsrl98@gmail.com)
+ * License: MIT
+ * Created On Tue May 09 2023
+ **/
 
 import type {
   AtomMapType,
