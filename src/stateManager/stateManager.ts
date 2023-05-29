@@ -41,6 +41,7 @@ export function createStateManager(store: Store) {
   return {
     atomState,
     atomValue,
+    setAtomState,
     subscribe,
   };
 }
