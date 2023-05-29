@@ -4,25 +4,15 @@
  * Copyright (c) 2023 SoonKiMin
  */
 
-type getter = <Value>(atom: AtomOrSelectorType<Value>) => Value;
-
-type AtomType<Value = any> = {
-  key: string;
-  initialState: Value;
-};
-
-type SelectorType<Value = any> = {
-  key: string;
-  get: ({ get }: { get: getter }) => Value;
-};
-
-type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
-
-type AtomMapType = Map<string, AtomType & { state: any }>;
-type SelectorMapType = Map<string, SelectorType & { state: any }>;
-
-type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
-type SelectorWithStateType<Value> = SelectorType<Value> & { state: Value };
+import {
+  AtomOrSelectorType,
+  AtomType,
+  SelectorMapType,
+  SelectorType,
+  AtomMapType,
+  AtomWithStateType,
+  SelectorWithStateType,
+} from "../types/store";
 
 interface Store {
   /**
@@ -34,7 +24,9 @@ interface Store {
    * receive atom and read itself.
    * @param atom
    */
-  readAtomState<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value>;
+  readAtomState<Value>(
+    atom: AtomOrSelectorType<Value>
+  ): AtomOrSelectorType<Value>;
   /**
    * receive atom and read it's value.
    * @param atom
@@ -45,7 +37,10 @@ interface Store {
    * @param targetAtom
    * @param newState
    */
-  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
+  writeAtomState<Value>(
+    targetAtom: AtomOrSelectorType<Value>,
+    newState: Value
+  ): void;
 }
 
 export type { AtomOrSelectorType, AtomType, Store, SelectorType };
@@ -56,7 +51,10 @@ export function createStore(): Store {
   const selectorDependencies: Map<string, Set<string>> = new Map();
 
   function createNewAtom<Value>(atom: AtomType<Value>) {
-    const newAtom: AtomType<Value> = { key: atom.key, initialState: atom.initialState };
+    const newAtom: AtomType<Value> = {
+      key: atom.key,
+      initialState: atom.initialState,
+    };
     atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
     return newAtom;
   }
@@ -89,18 +87,26 @@ export function createStore(): Store {
 
   function createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
   function createAtom<Value>(atom: SelectorType<Value>): SelectorType<Value>;
-  function createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value> {
+  function createAtom<Value>(
+    atom: AtomOrSelectorType<Value>
+  ): AtomOrSelectorType<Value> {
     if ("get" in atom) {
-      if (selectorMap.has(atom.key)) throw Error(`selector that has ${atom.key} key already exist`);
+      if (selectorMap.has(atom.key))
+        throw Error(`selector that has ${atom.key} key already exist`);
       return createNewSelector(atom);
     } else {
-      if (atomMap.has(atom.key)) throw Error(`atom that has ${atom.key} key already exist`);
+      if (atomMap.has(atom.key))
+        throw Error(`atom that has ${atom.key} key already exist`);
       return createNewAtom(atom);
     }
   }
 
-  function readAtomState<Value>(atom: AtomType<Value>): AtomWithStateType<Value>;
-  function readAtomState<Value>(atom: SelectorType<Value>): SelectorWithStateType<Value>;
+  function readAtomState<Value>(
+    atom: AtomType<Value>
+  ): AtomWithStateType<Value>;
+  function readAtomState<Value>(
+    atom: SelectorType<Value>
+  ): SelectorWithStateType<Value>;
   function readAtomState<Value>(
     atom: AtomOrSelectorType<Value>
   ): AtomWithStateType<Value> | SelectorWithStateType<Value> {
@@ -108,7 +114,9 @@ export function createStore(): Store {
       if (!selectorMap.has(atom.key)) {
         throw Error(`selector that has ${atom.key} key does not exist`);
       }
-      const selectorState = selectorMap.get(atom.key) as SelectorWithStateType<Value>;
+      const selectorState = selectorMap.get(
+        atom.key
+      ) as SelectorWithStateType<Value>;
 
       return selectorState;
     } else {
@@ -130,7 +138,10 @@ export function createStore(): Store {
     }
   }
 
-  function writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void {
+  function writeAtomState<Value>(
+    targetAtom: AtomOrSelectorType<Value>,
+    newState: Value
+  ): void {
     if ("get" in targetAtom) {
       const currentAtom = readAtomState(targetAtom);
       selectorMap.set(targetAtom.key, { ...currentAtom, state: newState });
