@@ -23,7 +23,10 @@ yarn add im-sang-tae
 To start using IM_SANG_TAE in your project, you need to create atoms or selectors with an initial state:
 
 ```javascript
-import { defaultStore } from "im_sang_tae";
+import { getDefaultStore } from "im-sang-tae";
+
+// get default store
+const defaultStore = getDefaultStore();
 
 // create atom
 const myAtom = defaultStore.createAtom({
@@ -43,7 +46,7 @@ const mySelector = defaultStore.createAtom({
 You can get the current state and set a new state using the atomState method from the state manager:
 
 ```javascript
-import { defaultManager } from "im_sang_tae";
+import { defaultStateManger } from "im-sang-tae";
 
 const [getMyAtom, setMyAtom] = defaultManager.atomState(myAtom);
 const [getMySelector, setMySelector] = defaultManager.atomState(mySelector);
