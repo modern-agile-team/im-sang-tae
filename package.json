@@ -10,7 +10,8 @@
     "types": "tsc --emitDeclarationOnly",
     "build": "npm run types && rollup -c",
     "start": "rollup -c -w",
-    "test": "jest"
+    "test": "jest",
+    "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done"
   },
   "repository": {
     "type": "git",
