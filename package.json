@@ -11,7 +11,8 @@
     "build": "npm run types && rollup -c",
     "start": "rollup -c -w",
     "test": "jest",
-    "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done"
+    "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
+    "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done"
   },
   "repository": {
     "type": "git",
