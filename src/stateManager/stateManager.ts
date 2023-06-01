@@ -16,13 +16,15 @@ export function createStateManager(store: Store) {
   }
 
   function setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
-    return (newValue: Value) => {
+    return (newValue: Value | Awaited<Value>) => {
       store.writeAtomState(atom, newValue);
       render(atom);
     };
   }
 
-  function atomState<Value>(atom: AtomOrSelectorType<Value>): [() => Value, (newValue: Value) => void] {
+  function atomState<Value>(
+    atom: AtomOrSelectorType<Value>
+  ): [() => Value, (newValue: Value | Awaited<Value>) => void] {
     return [atomValue(atom), setAtomState(atom)];
   }
 
