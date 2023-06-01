@@ -1,6 +1,6 @@
 {
   "name": "im-sang-tae",
-  "version": "0.2.14",
+  "version": "0.2.16",
   "description": "state management library that are not dependent on the framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,8 @@
     "start": "rollup -c -w",
     "test": "jest",
     "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
-    "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done"
+    "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done",
+    "update:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm update); done"
   },
   "repository": {
     "type": "git",
