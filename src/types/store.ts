@@ -58,7 +58,7 @@ export interface Store {
    * @param targetAtom
    * @param newState
    */
-  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
+  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): AtomOrSelectorType<Value>;
 
   /**
    * receive atomFamily and store in the atomMap.

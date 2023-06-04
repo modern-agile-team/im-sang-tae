@@ -50,9 +50,9 @@ export function createStateManager(store: Store) {
 
   function render<Value>(atom: AtomOrSelectorType<Value>) {
     const listeners = subscriptions.get(atom.key);
-    if (listeners) {
-      listeners.forEach((callback) => callback());
-    }
+    if (!listeners) return;
+
+    listeners.forEach((callback) => callback());
   }
 
   return {

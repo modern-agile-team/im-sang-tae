@@ -99,10 +99,10 @@ export function createStore(): Store {
     if (isSelector(atom)) {
       if (selectorMap.has(atom.key)) throw Error(`selector that has ${atom.key} key already exist`);
       return createNewSelector(atom);
-    } else {
-      if (atomMap.has(atom.key)) throw Error(`atom that has ${atom.key} key already exist`);
-      return createNewAtom(atom);
     }
+
+    if (atomMap.has(atom.key)) throw Error(`atom that has ${atom.key} key already exist`);
+    return createNewAtom(atom);
   }
 
   function createAtomFamily<Value, T>(atomFamily: AtomFamilyType<Value, T>): (param: T) => AtomType<Value>;
@@ -111,50 +111,44 @@ export function createStore(): Store {
     if (isSelector(atomFamily)) {
       if (selectorMap.has(atomFamily.key)) throw Error(`selector that has ${atomFamily.key} key already exist`);
       return createNewSelectorFamily(atomFamily);
-    } else {
-      if (atomMap.has(atomFamily.key)) throw Error(`atom that has ${atomFamily.key} key already exist`);
-      return createNewAtomFamily(atomFamily);
     }
+
+    if (atomMap.has(atomFamily.key)) throw Error(`atom that has ${atomFamily.key} key already exist`);
+    return createNewAtomFamily(atomFamily);
   }
 
   function readAtomState<Value>(atom: AtomType<Value>): AtomWithStateType<Value>;
   function readAtomState<Value>(atom: SelectorType<Value>): SelectorWithStateType<Value>;
   function readAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     if (isSelector(atom)) {
-      if (!selectorMap.has(atom.key)) {
-        throw Error(`selector that has ${atom.key} key does not exist`);
-      }
-      const selectorState = selectorMap.get(atom.key) as SelectorWithStateType<Value>;
-
-      return selectorState;
-    } else {
-      if (!atomMap.has(atom.key)) {
-        throw Error(`atom that has ${atom.key} key does not exist`);
-      }
-
-      const atomState = atomMap.get(atom.key) as AtomWithStateType<Value>;
-
-      return atomState;
+      if (!selectorMap.has(atom.key)) throw Error(`selector that has ${atom.key} key does not exist`);
+      return selectorMap.get(atom.key) as SelectorWithStateType<Value>;
     }
+
+    if (!atomMap.has(atom.key)) throw Error(`atom that has ${atom.key} key does not exist`);
+    return atomMap.get(atom.key) as AtomWithStateType<Value>;
   }
 
   function readAtomValue<Value>(atom: AtomOrSelectorType<Value> | AtomOrSelectorFamilyType<Value>) {
     if (isSelector(atom)) {
       return readAtomState(atom as SelectorType<Value>).state;
-    } else {
-      return readAtomState(atom as AtomType<Value>).state;
     }
+
+    return readAtomState(atom as AtomType<Value>).state;
   }
 
   function writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value) {
-    if ("get" in targetAtom) {
+    if (isSelector(targetAtom)) {
       const currentAtom = readAtomState(targetAtom);
       selectorMap.set(targetAtom.key, { ...currentAtom, state: newState });
-    } else {
-      const currentAtom = readAtomState(targetAtom);
-      atomMap.set(targetAtom.key, { ...currentAtom, state: newState });
+      updateDependencies(targetAtom);
+      return readAtomState(targetAtom);
     }
+
+    const currentAtom = readAtomState(targetAtom);
+    atomMap.set(targetAtom.key, { ...currentAtom, state: newState });
     updateDependencies(targetAtom);
+    return readAtomState(targetAtom);
   }
 
   return {
