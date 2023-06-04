@@ -100,7 +100,7 @@ export function createStore(): Store {
 
   function createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
   function createAtom<Value>(atom: SelectorType<Value>): SelectorType<Value>;
-  function createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value> {
+  function createAtom<Value>(atom: AtomOrSelectorType<Value>) {
     if (isSelector(atom)) {
       if (selectorMap.has(atom.key)) throw Error(`selector that has ${atom.key} key already exist`);
       return createNewSelector(atom);
@@ -112,21 +112,19 @@ export function createStore(): Store {
 
   function createAtomFamily<Value, T>(atomFamily: AtomFamilyType<Value, T>): (param: T) => AtomType<Value>;
   function createAtomFamily<Value, T>(atomFamily: SelectorFamilyType<Value, T>): (param: T) => SelectorType<Value>;
-  function createAtomFamily<Value, T>(
-    atomFamily: AtomOrSelectorFamilyType<Value, T>
-  ): (param: T) => AtomOrSelectorType<Value> {
+  function createAtomFamily<Value, T>(atomFamily: AtomOrSelectorFamilyType<Value, T>) {
     if (isSelector(atomFamily)) {
+      if (selectorMap.has(atomFamily.key)) throw Error(`selector that has ${atomFamily.key} key already exist`);
       return createNewSelectorFamily(atomFamily);
     } else {
+      if (atomMap.has(atomFamily.key)) throw Error(`atom that has ${atomFamily.key} key already exist`);
       return createNewAtomFamily(atomFamily);
     }
   }
 
   function readAtomState<Value>(atom: AtomType<Value>): AtomWithStateType<Value>;
   function readAtomState<Value>(atom: SelectorType<Value>): SelectorWithStateType<Value>;
-  function readAtomState<Value>(
-    atom: AtomOrSelectorType<Value>
-  ): AtomWithStateType<Value> | SelectorWithStateType<Value> {
+  function readAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     if (isSelector(atom)) {
       if (!selectorMap.has(atom.key)) {
         throw Error(`selector that has ${atom.key} key does not exist`);
@@ -145,7 +143,7 @@ export function createStore(): Store {
     }
   }
 
-  function readAtomValue<Value>(atom: AtomOrSelectorType<Value> | AtomOrSelectorFamilyType<Value>): Value {
+  function readAtomValue<Value>(atom: AtomOrSelectorType<Value> | AtomOrSelectorFamilyType<Value>) {
     if (isSelector(atom)) {
       return readAtomState(atom as SelectorType<Value>).state;
     } else {
@@ -153,7 +151,7 @@ export function createStore(): Store {
     }
   }
 
-  function writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void {
+  function writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value) {
     if ("get" in targetAtom) {
       const currentAtom = readAtomState(targetAtom);
       selectorMap.set(targetAtom.key, { ...currentAtom, state: newState });
