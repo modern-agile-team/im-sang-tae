@@ -171,11 +171,4 @@ export function createStore(): Store {
   };
 }
 
-let defaultStore: Store | undefined;
-
-export const getDefaultStore = () => {
-  if (!defaultStore) {
-    defaultStore = createStore();
-  }
-  return defaultStore;
-};
+export const defaultStore = createStore();

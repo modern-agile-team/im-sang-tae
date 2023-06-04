@@ -1,6 +1,4 @@
-import { defaultStateManger, getDefaultStore } from "../src/index";
-
-const defaultStore = getDefaultStore();
+import { defaultStateManger, defaultStore } from "../src/index";
 
 const numberAtom = defaultStore.createAtom({ key: "numberAtom", initialState: 0 });
 const numberSelector = defaultStore.createAtom({
@@ -9,6 +7,7 @@ const numberSelector = defaultStore.createAtom({
     return get(numberAtom) + 1;
   },
 });
+
 const numberAtomFamily = defaultStore.createAtomFamily<number, number>({
   key: "numberAtomFamily",
   initialState(param) {

@@ -4,8 +4,7 @@
  * Created On Tue May 09 2023
  **/
 
-import { getDefaultStore } from "../store";
-
+import { defaultStore } from "../store";
 import type { AtomOrSelectorType, Store } from "../types";
 
 type setStateArgument<Value> = Value | Awaited<Value> | ((prevValue: Value | Awaited<Value>) => Value | Awaited<Value>);
@@ -64,4 +63,4 @@ export function createStateManager(store: Store) {
   };
 }
 
-export const defaultStateManger = createStateManager(getDefaultStore());
+export const defaultStateManger = createStateManager(defaultStore);
