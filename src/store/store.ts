@@ -25,6 +25,7 @@ const isSelector = <Value, T>(
 export function createStore(): Store {
   const atomMap: AtomMapType = new Map();
   const selectorMap: SelectorMapType = new Map();
+
   const selectorDependencies: Map<string, Set<string>> = new Map();
 
   function createNewAtom<Value>(atom: AtomType<Value>) {
@@ -36,8 +37,8 @@ export function createStore(): Store {
     return newAtom;
   }
 
-  function createNewSelector<Value>(atom: SelectorType<Value>) {
-    const get = <Value>(getterState: AtomOrSelectorType<Value>) => {
+  function getter<Value>(atom: SelectorType | SelectorFamilyType<Value>) {
+    return <Value>(getterState: AtomOrSelectorType<Value>) => {
       // Track selector dependencies
       const dependency = selectorDependencies.get(getterState.key) || new Set();
       dependency.add(atom.key);
@@ -45,8 +46,11 @@ export function createStore(): Store {
 
       return readAtomValue(getterState);
     };
+  }
+
+  function createNewSelector<Value>(atom: SelectorType<Value>) {
     const newSelector: SelectorType<Value> = { key: atom.key, get: atom.get };
-    selectorMap.set(atom.key, { ...newSelector, state: atom.get({ get }) });
+    selectorMap.set(atom.key, { ...newSelector, state: atom.get({ get: getter<Value>(atom) }) });
     return newSelector;
   }
 
@@ -65,15 +69,6 @@ export function createStore(): Store {
   }
 
   function createNewSelectorFamily<Value, T>(atom: SelectorFamilyType<Value, T>) {
-    const get = <Value>(getterState: AtomOrSelectorType<Value>) => {
-      // Track selector dependencies
-      const dependency = selectorDependencies.get(getterState.key) || new Set();
-      dependency.add(atom.key);
-      selectorDependencies.set(getterState.key, dependency);
-
-      return readAtomValue(getterState);
-    };
-
     const newSelector: (param: T) => SelectorType<Value> = (param: T) => {
       return {
         key: atom.key,
@@ -81,7 +76,7 @@ export function createStore(): Store {
       };
     };
     return (param: T) => {
-      selectorMap.set(atom.key, { ...newSelector(param), state: atom.get(param)({ get }) });
+      selectorMap.set(atom.key, { ...newSelector(param), state: atom.get(param)({ get: getter<Value>(atom) }) });
       return newSelector(param);
     };
   }
