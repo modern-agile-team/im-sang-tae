@@ -33,3 +33,15 @@ describe("setNumberWithAsyncFunction", () => {
     expect(await getNumberS()).toBe(number);
   });
 });
+
+describe("setNumberWithCallback", () => {
+  afterEach(async () => {
+    setNumberS(async (prev) => {
+      return (await prev) + 1;
+    });
+  });
+
+  test.each([10, 11, 12, 13])("%s", async (number: number) => {
+    expect(await getNumberS()).toBe(number);
+  });
+});

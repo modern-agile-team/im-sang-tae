@@ -15,6 +15,10 @@ import type {
   Store,
 } from "../types";
 
+function isSelector<Value>(atom: AtomOrSelectorType<Value>): atom is SelectorType<Value> {
+  return "get" in atom;
+}
+
 export function createStore(): Store {
   const atomMap: AtomMapType = new Map();
   const selectorMap: SelectorMapType = new Map();
@@ -58,7 +62,7 @@ export function createStore(): Store {
   function createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
   function createAtom<Value>(atom: SelectorType<Value>): SelectorType<Value>;
   function createAtom<Value>(atom: AtomOrSelectorType<Value>): AtomOrSelectorType<Value> {
-    if ("get" in atom) {
+    if (isSelector(atom)) {
       if (selectorMap.has(atom.key)) throw Error(`selector that has ${atom.key} key already exist`);
       return createNewSelector(atom);
     } else {
@@ -72,7 +76,7 @@ export function createStore(): Store {
   function readAtomState<Value>(
     atom: AtomOrSelectorType<Value>
   ): AtomWithStateType<Value> | SelectorWithStateType<Value> {
-    if ("get" in atom) {
+    if (isSelector(atom)) {
       if (!selectorMap.has(atom.key)) {
         throw Error(`selector that has ${atom.key} key does not exist`);
       }
@@ -91,7 +95,7 @@ export function createStore(): Store {
   }
 
   function readAtomValue<Value>(atom: AtomOrSelectorType<Value>): Value {
-    if ("get" in atom) {
+    if (isSelector(atom)) {
       return readAtomState(atom as SelectorType<Value>).state;
     } else {
       return readAtomState(atom as AtomType<Value>).state;

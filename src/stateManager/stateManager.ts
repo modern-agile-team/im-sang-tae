@@ -8,6 +8,8 @@ import { getDefaultStore } from "../store";
 
 import type { AtomOrSelectorType, Store } from "../types";
 
+type setStateArgument<Value> = Value | Awaited<Value> | ((prevValue: Value | Awaited<Value>) => Value | Awaited<Value>);
+
 export function createStateManager(store: Store) {
   const subscriptions: Map<string, (() => void)[]> = new Map();
 
@@ -16,15 +18,29 @@ export function createStateManager(store: Store) {
   }
 
   function setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
-    return (newValue: Value | Awaited<Value>) => {
+    let newValue: Value | Awaited<Value>;
+
+    const result = (argument: setStateArgument<Value>) => {
+      if (typeof argument === "function") {
+        const setter = argument as (prevValue: Value | Awaited<Value>) => Value | Awaited<Value>;
+        const prevValue = store.readAtomValue(atom);
+        newValue = setter(prevValue);
+      } else {
+        newValue = argument;
+      }
       store.writeAtomState(atom, newValue);
       render(atom);
     };
+
+    return result;
   }
 
   function atomState<Value>(
     atom: AtomOrSelectorType<Value>
-  ): [() => Value, (newValue: Value | Awaited<Value>) => void] {
+  ): [
+    () => Value,
+    (newValue: Value | Awaited<Value> | ((prevValue: Value | Awaited<Value>) => Value | Awaited<Value>)) => void
+  ] {
     return [atomValue(atom), setAtomState(atom)];
   }
 
