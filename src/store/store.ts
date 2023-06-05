@@ -43,6 +43,7 @@ export function createStore(): Store {
     const newAtom: AtomType<Value> = {
       key: atom.key,
       initialState: atom.initialState,
+      options: atom.options,
     };
     atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
     if (atom.options?.persistence) {
@@ -55,6 +56,7 @@ export function createStore(): Store {
     const newSelector: SelectorType<Value> = {
       key: atom.key,
       get: atom.get,
+      options: atom.options,
     };
     const state = atom.get({ get: getter<Value>(atom) });
     selectorMap.set(atom.key, { ...newSelector, state });
@@ -69,11 +71,15 @@ export function createStore(): Store {
       return {
         key: atom.key,
         initialState: atom.initialState(param),
+        options: atom.options,
       };
     };
 
     return (param: T) => {
       atomMap.set(atom.key, { ...newAtom(param), state: atom.initialState(param) });
+      if (atom.options?.persistence) {
+        window[atom.options.persistence].setItem(atom.key, JSON.stringify(atom.initialState(param)));
+      }
       return newAtom(param);
     };
   }
@@ -83,10 +89,17 @@ export function createStore(): Store {
       return {
         key: atom.key,
         get: atom.get(param),
+        options: atom.options,
       };
     };
     return (param: T) => {
       selectorMap.set(atom.key, { ...newSelector(param), state: atom.get(param)({ get: getter<Value>(atom) }) });
+      if (atom.options?.persistence) {
+        window[atom.options.persistence].setItem(
+          atom.key,
+          JSON.stringify(atom.get(param)({ get: getter<Value>(atom) }))
+        );
+      }
       return newSelector(param);
     };
   }
@@ -132,10 +145,24 @@ export function createStore(): Store {
   function readAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     if (isSelector(atom)) {
       if (!selectorMap.has(atom.key)) throw Error(`selector that has ${atom.key} key does not exist`);
+      if (atom.options?.persistence) {
+        const atomInStorage = window[atom.options.persistence].getItem(atom.key);
+        if (!atomInStorage) {
+          throw Error(`selector that has ${atom.key} key does not exist in ${atom.options.persistence}`);
+        }
+        return { state: JSON.parse(atomInStorage) };
+      }
       return selectorMap.get(atom.key) as SelectorWithStateType<Value>;
     }
 
     if (!atomMap.has(atom.key)) throw Error(`atom that has ${atom.key} key does not exist`);
+    if (atom.options?.persistence) {
+      const atomInStorage = window[atom.options.persistence].getItem(atom.key);
+      if (!atomInStorage) {
+        throw Error(`selector that has ${atom.key} key does not exist in ${atom.options.persistence}`);
+      }
+      return { state: JSON.parse(atomInStorage) };
+    }
     return atomMap.get(atom.key) as AtomWithStateType<Value>;
   }
 
@@ -143,7 +170,6 @@ export function createStore(): Store {
     if (isSelector(atom)) {
       return readAtomState(atom as SelectorType<Value>).state;
     }
-
     return readAtomState(atom as AtomType<Value>).state;
   }
 
@@ -151,12 +177,18 @@ export function createStore(): Store {
     if (isSelector(targetAtom)) {
       const currentAtom = readAtomState(targetAtom);
       selectorMap.set(targetAtom.key, { ...currentAtom, state: newState });
+      if (targetAtom.options?.persistence) {
+        window[targetAtom.options.persistence].setItem(targetAtom.key, JSON.stringify(newState));
+      }
       updateDependencies(targetAtom);
       return readAtomState(targetAtom);
     }
 
     const currentAtom = readAtomState(targetAtom);
     atomMap.set(targetAtom.key, { ...currentAtom, state: newState });
+    if (targetAtom.options?.persistence) {
+      window[targetAtom.options.persistence].setItem(targetAtom.key, JSON.stringify(newState));
+    }
     updateDependencies(targetAtom);
     return readAtomState(targetAtom);
   }
