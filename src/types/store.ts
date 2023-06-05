@@ -11,12 +11,23 @@ export type AtomType<Value = any> = {
   initialState: Value;
 };
 
+export type AtomFamilyType<Value = any, T = any> = {
+  key: string;
+  initialState: (param: T) => Value;
+};
+
 export type SelectorType<Value = any> = {
   key: string;
   get: ({ get }: { get: getter }) => Value;
 };
 
+export type SelectorFamilyType<Value = any, T = any> = {
+  key: string;
+  get: (param: T) => ({ get }: { get: getter }) => Value;
+};
+
 export type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
+export type AtomOrSelectorFamilyType<Value = any, T = any> = AtomFamilyType<Value, T> | SelectorFamilyType<Value, T>;
 
 export type AtomMapType = Map<string, AtomType & { state: any }>;
 export type SelectorMapType = Map<string, SelectorType & { state: any }>;
@@ -47,5 +58,11 @@ export interface Store {
    * @param targetAtom
    * @param newState
    */
-  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): void;
+  writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value): AtomOrSelectorType<Value>;
+
+  /**
+   * receive atomFamily and store in the atomMap.
+   * @param atomFamily
+   */
+  createAtomFamily<Value, T>(atomFamily: AtomOrSelectorFamilyType<Value, T>): (param: T) => AtomOrSelectorType<Value>;
 }
