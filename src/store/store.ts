@@ -56,9 +56,10 @@ export function createStore(): Store {
       key: atom.key,
       get: atom.get,
     };
-    selectorMap.set(atom.key, { ...newSelector, state: atom.get({ get: getter<Value>(atom) }) });
+    const state = atom.get({ get: getter<Value>(atom) });
+    selectorMap.set(atom.key, { ...newSelector, state });
     if (atom.options?.persistence) {
-      window[atom.options.persistence].setItem(atom.key, JSON.stringify(atom.get({ get: getter(atom) })));
+      window[atom.options.persistence].setItem(atom.key, JSON.stringify(state));
     }
     return newSelector;
   }
