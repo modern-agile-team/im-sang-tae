@@ -25,9 +25,11 @@ const numberSelectorFamily = defaultStore.createAtomFamily<number, number>({
 });
 
 const [getNumber, setNumber] = defaultStateManger.atomState(numberAtom);
-const [getNumberS, setNumberS] = defaultStateManger.atomState(numberSelector);
-const [getNumberAtomFamily, setNumberAtomFamily] = defaultStateManger.atomState(numberAtomFamily(10));
-const [getNumberSelectorFamily, setNumberSelectorFamily] = defaultStateManger.atomState(numberSelectorFamily(10));
+const [getNumberWithSelector, setNumberS] = defaultStateManger.atomState(numberSelector);
+const [getNumberWithAtomFamily, setNumberWithAtomFamily] = defaultStateManger.atomState(numberAtomFamily(10));
+const [getNumberWithSelectorFamily, setNumberWithSelectorFamily] = defaultStateManger.atomState(
+  numberSelectorFamily(10)
+);
 
 describe("setNumber", () => {
   beforeEach(() => {
@@ -41,12 +43,12 @@ describe("setNumber", () => {
 
 describe("setNumberWithAsyncFunction", () => {
   beforeEach(async () => {
-    const number = await getNumberS();
+    const number = await getNumberWithSelector();
     setNumberS(number + 1);
   });
 
   test.each([6, 7, 8, 9])("%s", async (number: number) => {
-    expect(await getNumberS()).toBe(number);
+    expect(await getNumberWithSelector()).toBe(number);
   });
 });
 
@@ -58,30 +60,30 @@ describe("setNumberWithCallback", () => {
   });
 
   test.each([10, 11, 12, 13])("%s", async (number: number) => {
-    expect(await getNumberS()).toBe(number);
+    expect(await getNumberWithSelector()).toBe(number);
   });
 });
 
 describe("setNumberWithAtomFamily", () => {
   beforeEach(() => {
-    setNumberAtomFamily((prev) => {
+    setNumberWithAtomFamily((prev) => {
       return prev + 1;
     });
   });
 
   test.each([12, 13, 14, 15])("%s", (number: number) => {
-    expect(getNumberAtomFamily()).toBe(number);
+    expect(getNumberWithAtomFamily()).toBe(number);
   });
 });
 
 describe("setNumberWithSelectorFamily", () => {
   beforeEach(() => {
-    setNumberSelectorFamily((prev) => {
+    setNumberWithSelectorFamily((prev) => {
       return prev + 1;
     });
   });
 
   test.each([15, 16, 17, 18])("%s", (number: number) => {
-    expect(getNumberSelectorFamily()).toBe(number);
+    expect(getNumberWithSelectorFamily()).toBe(number);
   });
 });
