@@ -11,6 +11,8 @@
     "build": "npm run types && rollup -c",
     "start": "rollup -c -w",
     "test": "jest",
+    "start:localTest": "cd src/test && npm run start",
+    "build:localTest": "cd src/test && npm run build",
     "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
     "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done",
     "update:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm update); done"
