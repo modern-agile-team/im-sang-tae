@@ -15,6 +15,7 @@ export type AtomType<Value = any> = {
 export type AtomFamilyType<Value = any, T = any> = {
   key: string;
   initialState: (param: T) => Value;
+  options?: Options;
 };
 
 export type SelectorType<Value = any> = {
@@ -26,6 +27,7 @@ export type SelectorType<Value = any> = {
 export type SelectorFamilyType<Value = any, T = any> = {
   key: string;
   get: (param: T) => ({ get }: { get: getter }) => Value;
+  options?: Options;
 };
 
 export type AtomOrSelectorType<Value = any> = AtomType<Value> | SelectorType<Value>;
