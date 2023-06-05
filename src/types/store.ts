@@ -9,6 +9,7 @@ export type getter = <Value>(atom: AtomOrSelectorType<Value>) => Value;
 export type AtomType<Value = any> = {
   key: string;
   initialState: Value;
+  options?: Options;
 };
 
 export type AtomFamilyType<Value = any, T = any> = {
@@ -19,6 +20,7 @@ export type AtomFamilyType<Value = any, T = any> = {
 export type SelectorType<Value = any> = {
   key: string;
   get: ({ get }: { get: getter }) => Value;
+  options?: Options;
 };
 
 export type SelectorFamilyType<Value = any, T = any> = {
@@ -35,6 +37,10 @@ export type SelectorMapType = Map<string, SelectorType & { state: any }>;
 export type AtomWithStateType<Value> = AtomType<Value> & { state: Value };
 export type SelectorWithStateType<Value> = SelectorType<Value> & {
   state: Value;
+};
+
+export type Options = {
+  persistence?: "localStorage" | "sessionStorage";
 };
 
 export interface Store {

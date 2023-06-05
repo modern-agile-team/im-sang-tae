@@ -28,15 +28,6 @@ export function createStore(): Store {
 
   const selectorDependencies: Map<string, Set<string>> = new Map();
 
-  function createNewAtom<Value>(atom: AtomType<Value>) {
-    const newAtom: AtomType<Value> = {
-      key: atom.key,
-      initialState: atom.initialState,
-    };
-    atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
-    return newAtom;
-  }
-
   function getter<Value>(atom: SelectorType | SelectorFamilyType<Value>) {
     return <Value>(getterState: AtomOrSelectorType<Value>) => {
       // Track selector dependencies
@@ -48,9 +39,27 @@ export function createStore(): Store {
     };
   }
 
+  function createNewAtom<Value>(atom: AtomType<Value>) {
+    const newAtom: AtomType<Value> = {
+      key: atom.key,
+      initialState: atom.initialState,
+    };
+    atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
+    if (atom.options?.persistence) {
+      window[atom.options.persistence].setItem(atom.key, JSON.stringify(atom.initialState));
+    }
+    return newAtom;
+  }
+
   function createNewSelector<Value>(atom: SelectorType<Value>) {
-    const newSelector: SelectorType<Value> = { key: atom.key, get: atom.get };
+    const newSelector: SelectorType<Value> = {
+      key: atom.key,
+      get: atom.get,
+    };
     selectorMap.set(atom.key, { ...newSelector, state: atom.get({ get: getter<Value>(atom) }) });
+    if (atom.options?.persistence) {
+      window[atom.options.persistence].setItem(atom.key, JSON.stringify(atom.get({ get: getter(atom) })));
+    }
     return newSelector;
   }
 
