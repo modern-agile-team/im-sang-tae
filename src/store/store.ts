@@ -71,7 +71,9 @@ export function createStore(): Store {
       options: atom.options,
     };
     atomMap.set(atom.key, { ...newAtom, state: atom.initialState });
-    createAtomWithPersistence(atom, newAtom);
+    if (atom.options?.persistence) {
+      createAtomWithPersistence(atom, newAtom);
+    }
     return newAtom;
   }
 
@@ -83,7 +85,9 @@ export function createStore(): Store {
     };
     const state = atom.get({ get: getter<Value>(atom) });
     selectorMap.set(atom.key, { ...newSelector, state });
-    createAtomWithPersistence(atom, newSelector);
+    if (atom.options?.persistence) {
+      createAtomWithPersistence(atom, newSelector);
+    }
     return newSelector;
   }
 
@@ -98,7 +102,9 @@ export function createStore(): Store {
 
     return (param: T) => {
       atomMap.set(atom.key, { ...newAtom(param), state: atom.initialState(param) });
-      createAtomWithPersistence(atom, newAtom(param));
+      if (atom.options?.persistence) {
+        createAtomWithPersistence(atom, newAtom(param));
+      }
       return newAtom(param);
     };
   }
@@ -113,7 +119,9 @@ export function createStore(): Store {
     };
     return (param: T) => {
       selectorMap.set(atom.key, { ...newSelector(param), state: atom.get(param)({ get: getter<Value>(atom) }) });
-      createAtomWithPersistence(atom, newSelector(param));
+      if (atom.options?.persistence) {
+        createAtomWithPersistence(atom, newSelector(param));
+      }
       return newSelector(param);
     };
   }
