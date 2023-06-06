@@ -5,11 +5,9 @@
  **/
 
 import { defaultStore } from "../store";
-import type { AtomOrSelectorType, Store } from "../types";
+import type { AtomOrSelectorType, StateManager, Store, setStateArgument } from "../types";
 
-type setStateArgument<Value> = Value | Awaited<Value> | ((prevValue: Value | Awaited<Value>) => Value | Awaited<Value>);
-
-export function createStateManager(store: Store) {
+export function createStateManager(store: Store): StateManager {
   const subscriptions: Map<string, (() => void)[]> = new Map();
 
   /**
