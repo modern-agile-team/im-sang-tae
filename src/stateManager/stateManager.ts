@@ -43,8 +43,6 @@ export function createStateManager(store: Store) {
     return [atomValue(atom), setAtomState(atom)];
   }
 
-  function subscribe(targetAtom: AtomOrSelectorType, callback: () => void): void;
-  function subscribe(targetAtomList: AtomOrSelectorType[], callback: () => void): void;
   function subscribe(targetAtom: AtomOrSelectorType | AtomOrSelectorType[], callback: () => void) {
     if (Array.isArray(targetAtom)) {
       targetAtom.forEach((atom) => {
