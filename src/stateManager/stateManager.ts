@@ -12,10 +12,18 @@ type setStateArgument<Value> = Value | Awaited<Value> | ((prevValue: Value | Awa
 export function createStateManager(store: Store) {
   const subscriptions: Map<string, (() => void)[]> = new Map();
 
+  /**
+   * Reads the current value of the provided atom or selector.
+   * @returns a function that, when invoked, returns the current value of the atom.
+   */
   function atomValue<Value>(atom: AtomOrSelectorType<Value>) {
     return () => store.readAtomValue(atom);
   }
 
+  /**
+   * Creates a setter function for a provided atom.
+   * The setter function updates the atom's value and triggers a rerender for all subscribers.
+   */
   function setAtomState<Value>(atom: AtomOrSelectorType<Value>) {
     let newValue: Value | Awaited<Value>;
 
@@ -34,6 +42,9 @@ export function createStateManager(store: Store) {
     return result;
   }
 
+  /**
+   * Returns a tuple of getter and setter functions for a given atom.
+   */
   function atomState<Value>(
     atom: AtomOrSelectorType<Value>
   ): [
@@ -43,6 +54,10 @@ export function createStateManager(store: Store) {
     return [atomValue(atom), setAtomState(atom)];
   }
 
+  /**
+   * Subscribes a callback function to one or many atoms or selectors.
+   * The callback is called whenever one of the subscribed atoms changes its value.
+   */
   function subscribe(targetAtom: AtomOrSelectorType | AtomOrSelectorType[], callback: () => void) {
     if (Array.isArray(targetAtom)) {
       targetAtom.forEach((atom) => {
@@ -55,6 +70,9 @@ export function createStateManager(store: Store) {
     }
   }
 
+  /**
+   * Calls all subscribed callbacks for a given atom.
+   */
   function render<Value>(atom: AtomOrSelectorType<Value>) {
     const listeners = subscriptions.get(atom.key);
     if (!listeners) return;
