@@ -43,9 +43,18 @@ export function createStateManager(store: Store) {
     return [atomValue(atom), setAtomState(atom)];
   }
 
-  function subscribe(atom: AtomOrSelectorType, callback: () => void) {
-    const existingSubscriptions = subscriptions.get(atom.key) || [];
-    subscriptions.set(atom.key, [...existingSubscriptions, callback]);
+  function subscribe(targetAtom: AtomOrSelectorType, callback: () => void): void;
+  function subscribe(targetAtomList: AtomOrSelectorType[], callback: () => void): void;
+  function subscribe(targetAtom: AtomOrSelectorType | AtomOrSelectorType[], callback: () => void) {
+    if (Array.isArray(targetAtom)) {
+      targetAtom.forEach((atom) => {
+        const existingSubscriptions = subscriptions.get(atom.key) || [];
+        subscriptions.set(atom.key, [...existingSubscriptions, callback]);
+      });
+    } else {
+      const existingSubscriptions = subscriptions.get(targetAtom.key) || [];
+      subscriptions.set(targetAtom.key, [...existingSubscriptions, callback]);
+    }
   }
 
   function render<Value>(atom: AtomOrSelectorType<Value>) {

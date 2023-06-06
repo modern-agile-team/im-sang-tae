@@ -138,29 +138,14 @@ SelectorFamilyButton.onclick = () => {
   setSelectorFamily((prev) => prev + 1);
 };
 
-defaultStateManger.subscribe(atom, () => {
-  AtomText.innerText = `atom => ${getAtom()}`;
-  SelectorText.innerText = `selector => ${getSelector()}`;
-  SelectorWithStorageText.innerText = `selectorWithStorage => ${getSelectorWithStorage()}`;
-  SelectorFamilyText.innerText = `selectorFamily => ${getSelectorFamily()}`;
-});
-
-defaultStateManger.subscribe(atomWithStorage, () => {
-  AtomWithStorageText.innerText = `atomWithStorage => ${getAtomWithStorage()}`;
-});
-
-defaultStateManger.subscribe(atomFamily(10), () => {
-  AtomFamilyText.innerText = `atomFamily => ${getAtomFamily()}`;
-});
-
-defaultStateManger.subscribe(selector, () => {
-  SelectorText.innerText = `selector => ${getSelector()}`;
-});
-
-defaultStateManger.subscribe(selectorWithStorage, () => {
-  SelectorWithStorageText.innerText = `selectorWithStorage => ${getSelectorWithStorage()}`;
-});
-
-defaultStateManger.subscribe(selectorFamily(10), () => {
-  SelectorFamilyText.innerText = `selectorFamily => ${getSelectorFamily()}`;
-});
+defaultStateManger.subscribe(
+  [atom, atomWithStorage, atomFamily(10), selector, selectorWithStorage, selectorFamily(10)],
+  () => {
+    AtomText.innerText = `atom => ${getAtom()}`;
+    AtomWithStorageText.innerText = `atomWithStorage => ${getAtomWithStorage()}`;
+    AtomFamilyText.innerText = `atomFamily => ${getAtomFamily()}`;
+    SelectorText.innerText = `selector => ${getSelector()}`;
+    SelectorWithStorageText.innerText = `selectorWithStorage => ${getSelectorWithStorage()}`;
+    SelectorFamilyText.innerText = `selectorFamily => ${getSelectorFamily()}`;
+  }
+);
