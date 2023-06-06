@@ -4,9 +4,7 @@
  * Copyright (c) 2023 Your Company
  */
 
-import { getDefaultStore } from "im-sang-tae";
-
-const defaultStore = getDefaultStore();
+import { defaultStore } from "im-sang-tae";
 
 export const numberAtom = defaultStore.createAtom({
   key: "numberAtom",
