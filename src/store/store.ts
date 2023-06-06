@@ -18,6 +18,7 @@ import type {
   Store,
 } from "../types";
 
+// Returns true if the atom is a selector
 const isSelector = <Value, T>(
   atom: AtomOrSelectorType<Value> | AtomOrSelectorFamilyType<Value, T>
 ): atom is SelectorType<Value> | SelectorFamilyType<Value, T> => "get" in atom;
@@ -53,6 +54,10 @@ export function createStore(): Store {
     }
   }
 
+  /**
+   * Generates a getter function to fetch the atom's value for the given selector
+   * and tracks the dependencies between the selector and atom.
+   */
   function getter<Value>(atom: SelectorType | SelectorFamilyType<Value>) {
     return <Value>(getterState: AtomOrSelectorType<Value>) => {
       // Track selector dependencies
@@ -64,6 +69,9 @@ export function createStore(): Store {
     };
   }
 
+  /**
+   * Creates a new atom, adds it to the atomMap and handles persistence if needed.
+   */
   function createNewAtom<Value>(atom: AtomType<Value>) {
     const newAtom: AtomType<Value> = {
       key: atom.key,
@@ -77,6 +85,9 @@ export function createStore(): Store {
     return newAtom;
   }
 
+  /**
+   * Creates a new selector, adds it to the selectorMap and handles persistence if needed.
+   */
   function createNewSelector<Value>(atom: SelectorType<Value>) {
     const newSelector: SelectorType<Value> = {
       key: atom.key,
@@ -91,6 +102,9 @@ export function createStore(): Store {
     return newSelector;
   }
 
+  /**
+   * Creates a new atomFamily - a factory function that creates different atoms for each parameter.
+   */
   function createNewAtomFamily<Value, T>(atom: AtomFamilyType<Value, T>) {
     const newAtom: (param: T) => AtomType<Value> = (param: T) => {
       return {
@@ -109,6 +123,9 @@ export function createStore(): Store {
     };
   }
 
+  /**
+   * Creates a new selectorFamily - a factory function that creates different selectors for each parameter.
+   */
   function createNewSelectorFamily<Value, T>(atom: SelectorFamilyType<Value, T>) {
     const newSelector: (param: T) => SelectorType<Value> = (param: T) => {
       return {
@@ -126,6 +143,9 @@ export function createStore(): Store {
     };
   }
 
+  /**
+   * Updates the state of all selectors that depend on the atom whenever it changes.
+   */
   function updateDependencies<Value>(atom: AtomOrSelectorType<Value>) {
     const dependencies = selectorDependencies.get(atom.key);
     if (dependencies) {
@@ -138,6 +158,11 @@ export function createStore(): Store {
     }
   }
 
+  // ############### Functions below are main interface ############### //
+
+  /**
+   * Creates a new atom, throwing an error if an atom with the same key already exists.
+   */
   function createAtom<Value>(atom: AtomType<Value>): AtomType<Value>;
   function createAtom<Value>(atom: SelectorType<Value>): SelectorType<Value>;
   function createAtom<Value>(atom: AtomOrSelectorType<Value>) {
@@ -150,6 +175,9 @@ export function createStore(): Store {
     return createNewAtom(atom);
   }
 
+  /**
+   * Creates a new atom family, throwing an error if an atom family with the same key already exists.
+   */
   function createAtomFamily<Value, T>(atomFamily: AtomFamilyType<Value, T>): (param: T) => AtomType<Value>;
   function createAtomFamily<Value, T>(atomFamily: SelectorFamilyType<Value, T>): (param: T) => SelectorType<Value>;
   function createAtomFamily<Value, T>(atomFamily: AtomOrSelectorFamilyType<Value, T>) {
@@ -162,6 +190,9 @@ export function createStore(): Store {
     return createNewAtomFamily(atomFamily);
   }
 
+  /**
+   * Reads the current state of a given atom, throwing an error if the atom does not exist.
+   */
   function readAtomState<Value>(atom: AtomType<Value>): AtomWithStateType<Value>;
   function readAtomState<Value>(atom: SelectorType<Value>): SelectorWithStateType<Value>;
   function readAtomState<Value>(atom: AtomOrSelectorType<Value>) {
@@ -174,6 +205,9 @@ export function createStore(): Store {
     return atomMap.get(atom.key) as AtomWithStateType<Value>;
   }
 
+  /**
+   * Returns the current value of a given atom.
+   */
   function readAtomValue<Value>(atom: AtomOrSelectorType<Value> | AtomOrSelectorFamilyType<Value>) {
     if (isSelector(atom)) {
       return readAtomState(atom as SelectorType<Value>).state;
@@ -181,6 +215,9 @@ export function createStore(): Store {
     return readAtomState(atom as AtomType<Value>).state;
   }
 
+  /**
+   * Updates the state of a given atom to a new value and updates all dependencies.
+   */
   function writeAtomState<Value>(targetAtom: AtomOrSelectorType<Value>, newState: Value) {
     if (isSelector(targetAtom)) {
       const currentAtom = readAtomState(targetAtom);
