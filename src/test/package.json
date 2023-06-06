@@ -1,5 +1,5 @@
 {
-  "name": "example1",
+  "name": "test",
   "version": "1.0.0",
   "description": "",
   "main": "dist/main.js",
@@ -10,9 +10,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "im-sang-tae": "^0.5.0"
-  },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "ts-loader": "^9.4.2",

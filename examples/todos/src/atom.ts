@@ -4,9 +4,7 @@
  * Created On Tue May 30 2023
  **/
 
-import { getDefaultStore } from "im-sang-tae";
-
-const defaultStore = getDefaultStore();
+import { defaultStore } from "im-sang-tae";
 
 type TodoType = {
   key: number;

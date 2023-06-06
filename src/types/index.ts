@@ -5,3 +5,4 @@
  **/
 
 export type * from "./store";
+export type * from "./stateManager";
