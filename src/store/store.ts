@@ -197,6 +197,7 @@ export function createStore(): Store {
     if (targetAtom.options?.persistence) {
       window[targetAtom.options.persistence].setItem(targetAtom.key, JSON.stringify(newState));
     }
+    updateDependencies(targetAtom);
     return readAtomState(targetAtom);
   }
 
