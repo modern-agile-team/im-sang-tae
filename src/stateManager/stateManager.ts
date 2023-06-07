@@ -56,13 +56,28 @@ export function createStateManager(store: Store): StateManager {
    * Subscribes a callback function to one or many atoms or selectors.
    * The callback is called whenever one of the subscribed atoms changes its value.
    */
-  function subscribe(targetAtom: AtomOrSelectorType | AtomOrSelectorType[], callback: () => void) {
+  function subscribe(
+    targetAtom:
+      | (AtomOrSelectorType | ((param: any) => AtomOrSelectorType))
+      | (((param: any) => AtomOrSelectorType) | AtomOrSelectorType)[],
+    callback: () => void
+  ) {
     if (Array.isArray(targetAtom)) {
       targetAtom.forEach((atom) => {
+        if (typeof atom === "function") {
+          const existingSubscriptions = subscriptions.get(atom(null).key) || [];
+          subscriptions.set(atom(null).key, [...existingSubscriptions, callback]);
+          return;
+        }
         const existingSubscriptions = subscriptions.get(atom.key) || [];
         subscriptions.set(atom.key, [...existingSubscriptions, callback]);
       });
     } else {
+      if (typeof targetAtom === "function") {
+        const existingSubscriptions = subscriptions.get(targetAtom(null).key) || [];
+        subscriptions.set(targetAtom(null).key, [...existingSubscriptions, callback]);
+        return;
+      }
       const existingSubscriptions = subscriptions.get(targetAtom.key) || [];
       subscriptions.set(targetAtom.key, [...existingSubscriptions, callback]);
     }
