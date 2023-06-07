@@ -52,19 +52,27 @@ export function createStateManager(store: Store): StateManager {
     return [atomValue(atom), setAtomState(atom)];
   }
 
+  function subscribeCallbackToSingleAtom(atom: AtomOrSelectorType, callback: () => void) {
+    const existingSubscriptions = subscriptions.get(atom.key) || [];
+    subscriptions.set(atom.key, [...existingSubscriptions, callback]);
+  }
+
   /**
    * Subscribes a callback function to one or many atoms or selectors.
    * The callback is called whenever one of the subscribed atoms changes its value.
    */
-  function subscribe(targetAtom: AtomOrSelectorType | AtomOrSelectorType[], callback: () => void) {
+  function subscribe(
+    targetAtom:
+      | (AtomOrSelectorType | ((param: any) => AtomOrSelectorType))
+      | (((param: any) => AtomOrSelectorType) | AtomOrSelectorType)[],
+    callback: () => void
+  ) {
     if (Array.isArray(targetAtom)) {
       targetAtom.forEach((atom) => {
-        const existingSubscriptions = subscriptions.get(atom.key) || [];
-        subscriptions.set(atom.key, [...existingSubscriptions, callback]);
+        subscribeCallbackToSingleAtom(typeof atom === "function" ? atom(null) : atom, callback);
       });
     } else {
-      const existingSubscriptions = subscriptions.get(targetAtom.key) || [];
-      subscriptions.set(targetAtom.key, [...existingSubscriptions, callback]);
+      subscribeCallbackToSingleAtom(typeof targetAtom === "function" ? targetAtom(null) : targetAtom, callback);
     }
   }
 

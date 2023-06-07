@@ -35,5 +35,10 @@ export interface StateManager {
    * Subscribes a callback function to one or many atoms or selectors.
    * The callback is called whenever one of the subscribed atoms changes its value.
    */
-  subscribe(targetAtom: AtomOrSelectorType | AtomOrSelectorType[], callback: () => void): void;
+  subscribe(
+    targetAtom:
+      | (AtomOrSelectorType | ((param: any) => AtomOrSelectorType))
+      | (((param: any) => AtomOrSelectorType) | AtomOrSelectorType)[],
+    callback: () => void
+  ): void;
 }
