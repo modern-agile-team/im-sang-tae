@@ -26,6 +26,7 @@ const dtsBundle = {
   output: {
     file: path.resolve(__dirname, "dist", "types", "index.d.ts"),
     format: "es",
+    sourcemap: true,
   },
   plugins: [dts()],
 };
