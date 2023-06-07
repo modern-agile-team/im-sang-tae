@@ -1,6 +1,6 @@
 {
   "name": "im-sang-tae",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "state management library that are not dependent on the framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -45,8 +45,9 @@
     "@types/jest": "^29.5.1",
     "jest": "^29.5.0",
     "rollup": "^3.23.0",
-    "rollup-plugin-delete": "^2.0.0", 
+    "rollup-plugin-delete": "^2.0.0",
     "@rollup/plugin-terser": "^0.4.3",
+    "rollup-plugin-dts": "^5.3.0",
     "ts-jest": "^29.1.0",
     "tslib": "^2.5.2"
   }
