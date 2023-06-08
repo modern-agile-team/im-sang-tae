@@ -26,6 +26,7 @@ demo
 webpack.config.js
 public/
 tsconfig.json
+rollup.config.js
 
 # git
 .gitignore
