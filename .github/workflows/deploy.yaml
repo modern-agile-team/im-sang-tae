@@ -46,7 +46,6 @@ jobs:
           
           if [[ $VERSION_BUMP != "" ]]
           then
-            npm version $VERSION_BUMP
             NEW_VERSION=$(npm version $VERSION_BUMP) 
             npm run build
             npm publish
