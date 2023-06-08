@@ -23,10 +23,7 @@ yarn add im-sang-tae
 To start using IM_SANG_TAE in your project, you need to create atoms or selectors with an initial state:
 
 ```javascript
-import { getDefaultStore } from "im-sang-tae";
-
-// get default store
-const defaultStore = getDefaultStore();
+import { defaultStore } from "im-sang-tae";
 
 // create atom
 const myAtom = defaultStore.createAtom({
