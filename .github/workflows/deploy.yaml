@@ -47,6 +47,8 @@ jobs:
           if [[ $VERSION_BUMP != "" ]]
           then
             NEW_VERSION=$(npm version $VERSION_BUMP) 
+            git commit -am "$NEW_VERSION"
+            git push origin master
             npm run build
             npm publish
             git push --tags
