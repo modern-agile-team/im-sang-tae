@@ -1,6 +1,6 @@
 {
   "name": "im-sang-tae",
-  "version": "0.5.10",
+  "version": "0.5.11",
   "description": "state management library that are not dependent on the framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
