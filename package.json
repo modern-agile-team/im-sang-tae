@@ -1,6 +1,6 @@
 {
   "name": "im-sang-tae",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "state management library that are not dependent on the framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,12 +34,7 @@
     "url": "https://github.com/modern-agile-team/im-sang-tae/issues",
     "email": "alstnsrl98@gmail.com"
   },
-  "homepage": "https://github.com/modern-agile-team/im-sang-tae#readme",
-  "dependencies": {
-    "@types/node": "^20.1.1",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
-  },
+  "homepage": "https://github.com/modern-agile-team/im-sang-tae#readme", 
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.1",
     "@types/jest": "^29.5.1",
@@ -49,6 +44,9 @@
     "@rollup/plugin-terser": "^0.4.3",
     "rollup-plugin-dts": "^5.3.0",
     "ts-jest": "^29.1.0",
-    "tslib": "^2.5.2"
+    "tslib": "^2.5.2",
+    "@types/node": "^20.1.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
   }
 }
