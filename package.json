@@ -1,12 +1,12 @@
 {
   "name": "im-sang-tae",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "state management library that are not dependent on the framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "private": false,
   "type": "module",
-  "scripts": { 
+  "scripts": {
     "types": "tsc --emitDeclarationOnly",
     "build": "npm run types && rollup -c",
     "start": "rollup -c -w",
@@ -34,7 +34,7 @@
     "url": "https://github.com/modern-agile-team/im-sang-tae/issues",
     "email": "alstnsrl98@gmail.com"
   },
-  "homepage": "https://github.com/modern-agile-team/im-sang-tae#readme", 
+  "homepage": "https://github.com/modern-agile-team/im-sang-tae#readme",
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.1",
     "@types/jest": "^29.5.1",
