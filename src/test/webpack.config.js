@@ -2,8 +2,9 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
-  mode: "production",
+  mode: "development",
   entry: ["./app.ts"],
+  devtool: "eval",
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),

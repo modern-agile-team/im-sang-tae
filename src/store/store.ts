@@ -23,6 +23,16 @@ const isSelector = <Value, T>(
   atom: AtomOrSelectorType<Value> | AtomOrSelectorFamilyType<Value, T>
 ): atom is SelectorType<Value> | SelectorFamilyType<Value, T> => "get" in atom;
 
+const getParsedStorageItem = (storage: "localStorage" | "sessionStorage", key: string) => {
+  const item = window[storage].getItem(key);
+  if (!item) return null;
+  return JSON.parse(item);
+};
+
+const setItemToStorage = <V>(key: string, item: V, storage: "localStorage" | "sessionStorage") => {
+  window[storage].setItem(key, JSON.stringify(item));
+};
+
 export function createStore(): Store {
   const atomMap: AtomMapType = new Map();
   const selectorMap: SelectorMapType = new Map();
@@ -35,22 +45,24 @@ export function createStore(): Store {
   ) {
     if (!atom.options?.persistence) return;
 
-    const atomInStorage = window[atom.options.persistence].getItem(atom.key);
+    const atomInStorage = getParsedStorageItem(atom.options.persistence, atom.key);
     if (atomInStorage) {
       if (isSelector(atom)) {
         if (!isSelector(newAtom)) return;
-        selectorMap.set(atom.key, { ...newAtom, state: JSON.parse(atomInStorage) });
+        selectorMap.set(atom.key, { ...newAtom, state: atomInStorage });
       } else {
         if (isSelector(newAtom)) return;
-        atomMap.set(atom.key, { ...newAtom, state: JSON.parse(atomInStorage) });
+        atomMap.set(atom.key, { ...newAtom, state: atomInStorage });
       }
+      return;
+    }
+    if (isSelector(atom)) {
+      if (!isSelector(newAtom)) return;
+      const state = newAtom.get({ get: getter<Value>(newAtom) });
+      setItemToStorage(atom.key, state, atom.options.persistence);
     } else {
-      if (isSelector(atom)) {
-        const state = atom.get({ get: getter<Value>(atom) });
-        window[atom.options.persistence].setItem(atom.key, JSON.stringify(state));
-      } else {
-        window[atom.options.persistence].setItem(atom.key, JSON.stringify(atom.initialState));
-      }
+      if (isSelector(newAtom)) return;
+      setItemToStorage(atom.key, newAtom.initialState, atom.options.persistence);
     }
   }
 
