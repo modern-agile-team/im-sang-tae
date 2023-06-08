@@ -11,7 +11,7 @@ jobs:
     - name: Fail if PR title is not correct
       run: |
         PR_TITLE="${{ github.event.pull_request.title }}"
-        if [[ ! $PR_TITLE =~ ^(Deploy[Major]|Deploy[Minor]|Deploy[Patch]) ]]; then
-          echo "error: The PR title does not match the required format. Please use 'Deploy Major', 'Deploy Minor', or 'Deploy Patch'"
+        if [[ ! $PR_TITLE =~ ^(Deploy Major|Deploy Minor|Deploy Patch) ]]; then
+          echo "error: The PR title $PR_TITLE does not match the required format. Please use 'Deploy Major', 'Deploy Minor', or 'Deploy Patch'"
           exit 1
         fi

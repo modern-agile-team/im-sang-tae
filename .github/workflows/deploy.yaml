@@ -27,13 +27,13 @@ jobs:
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           VERSION_BUMP=""
-          if [[ $PR_TITLE == "Deploy[Major]" ]]
+          if [[ $PR_TITLE == "Deploy Major" ]]
           then
             VERSION_BUMP="major"
-          elif [[ $PR_TITLE == "Deploy[Minor]" ]]
+          elif [[ $PR_TITLE == "Deploy Minor" ]]
           then
             VERSION_BUMP="minor"
-          elif [[ $PR_TITLE == "Deploy[Patch]" ]]
+          elif [[ $PR_TITLE == "Deploy Patch" ]]
           then
             VERSION_BUMP="patch"
           fi
