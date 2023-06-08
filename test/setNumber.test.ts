@@ -1,3 +1,9 @@
+/**
+ * Author: SoonKi Min (alstnsrl98@gmail.com)
+ * License: MIT
+ * Created On Thu Jun 08 2023
+ **/
+
 import { defaultStateManger, defaultStore } from "../src/index";
 
 const numberAtom = defaultStore.createAtom({ key: "numberAtom", initialState: 0 });
