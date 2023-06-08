@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set up Git user
+        run: |
+          git config --global user.name "${{ secrets.USER_NAME }}"
+          git config --global user.email "${{ secrets.USER_EMAIL }}"
+
+
       - name: Bump version, Publish and Release
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
