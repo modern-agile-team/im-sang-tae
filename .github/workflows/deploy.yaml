@@ -46,7 +46,7 @@ jobs:
             VERSION_BUMP="patch"
           fi
           
-          cat VERSION_BUMP
+          cat "VERSION_BUMP"
           cat $VERSION_BUMP
           if [[ $VERSION_BUMP != "" ]]
           then
