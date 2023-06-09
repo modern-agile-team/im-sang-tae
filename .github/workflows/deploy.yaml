@@ -54,6 +54,7 @@ jobs:
             echo "NEW_VERSION: $NEW_VERSION"
             cat package.json
             git commit -am "$NEW_VERSION"
+            git remote -v
             git push origin action-test
             npm run build
             npm publish
