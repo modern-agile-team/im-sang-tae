@@ -1,9 +1,9 @@
 name: Automatic Version Bump, Publish and Release
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
-      - master
+      - feat/shlee/62
+    
 jobs:
   build:
     runs-on: ubuntu-latest
