@@ -55,7 +55,8 @@ jobs:
             git remote -v
             git status
             cat package.json
-            git commit -am "$NEW_VERSION"
+            git add .
+            git commit -m "$NEW_VERSION"
             git status
             git push origin action-test
             git status
