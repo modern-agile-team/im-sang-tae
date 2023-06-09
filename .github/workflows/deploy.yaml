@@ -2,7 +2,7 @@ name: Automatic Version Bump, Publish and Release
 on:
   push:
     branches:
-      - feat/shlee/62
+      - 'feat/shlee/62'
     
 jobs:
   build:
