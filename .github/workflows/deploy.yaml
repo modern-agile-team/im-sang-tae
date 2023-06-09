@@ -33,6 +33,7 @@ jobs:
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           cat PR_TITLE
+          cat $PR_TITLE
           VERSION_BUMP=""
           if [[ $PR_TITLE == "Deploy Major" ]]
           then
@@ -45,6 +46,8 @@ jobs:
             VERSION_BUMP="patch"
           fi
           
+          cat "-----------------"
+          cat $VERSION_BUMP
           if [[ $VERSION_BUMP != "" ]]
           then
             NEW_VERSION=$(npm version $VERSION_BUMP) 
