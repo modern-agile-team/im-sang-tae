@@ -52,9 +52,9 @@ jobs:
           then
             NEW_VERSION=$(npm version $VERSION_BUMP) 
             echo "NEW_VERSION: $NEW_VERSION"
+            git remote -v
             cat package.json
             git commit -am "$NEW_VERSION"
-            git remote -v
             git push origin action-test
             npm run build
             npm publish
