@@ -32,6 +32,7 @@ jobs:
       - name: Bump version, Publish and Release
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
+          cat PR_TITLE
           VERSION_BUMP=""
           if [[ $PR_TITLE == "Deploy Major" ]]
           then
