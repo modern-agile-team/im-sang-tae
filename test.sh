@@ -9,3 +9,7 @@ git commit -m "$NEW_VERSION"
 git status
 git push origin feat/shlee/62
 git status
+npm run build
+npm publish
+git push --tags
+gh release create $NEW_VERSION -t $NEW_VERSION -n "Release $NEW_VERSION"
