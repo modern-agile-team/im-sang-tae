@@ -43,7 +43,7 @@ const mySelector = defaultStore.createAtom({
 You can get the current state and set a new state using the atomState method from the state manager:
 
 ```javascript
-import { defaultStateManger } from "im-sang-tae";
+import { defaultManager } from "im-sang-tae";
 
 const [getMyAtom, setMyAtom] = defaultManager.atomState(myAtom);
 const [getMySelector, setMySelector] = defaultManager.atomState(mySelector);
