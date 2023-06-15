@@ -90,6 +90,22 @@ const SelectorButton = document.createElement("button");
 const SelectorWithStorageButton = document.createElement("button");
 const SelectorFamilyButton = document.createElement("button");
 
+const multiSetStateProcess = setInterval(() => {
+  SelectorButton.click();
+  SelectorButton.click();
+  SelectorButton.click();
+  SelectorButton.click();
+  AtomButton.click();
+  AtomButton.click();
+  AtomButton.click();
+  AtomButton.click();
+  AtomButton.click();
+}, 100);
+
+setTimeout(() => {
+  clearInterval(multiSetStateProcess);
+}, 5000);
+
 AtomButton.innerText = "AtomButton + 1";
 AtomWithStorageButton.innerText = "AtomWithStorageButton + 1";
 AtomFamilyButton.innerText = "AtomFamilyButton + 1";
