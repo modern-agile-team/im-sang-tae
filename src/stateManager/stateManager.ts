@@ -9,6 +9,35 @@ import type { AtomOrSelectorType, StateManager, Store, setStateArgument } from "
 
 export function createStateManager(store: Store): StateManager {
   const subscriptions: Map<string, (() => void)[]> = new Map();
+  const atomBatchingQueue: { [key: string]: { atom: AtomOrSelectorType; newValue: any }[] } = {};
+
+  let processingQueueFlag = false;
+
+  function batching(process: (last: { atom: AtomOrSelectorType; newValue: any }) => void) {
+    if (processingQueueFlag) return;
+
+    processingQueueFlag = true;
+
+    Promise.resolve().then(() => {
+      const atomKeyList = Object.keys(atomBatchingQueue);
+
+      const promises = atomKeyList.map((key) => {
+        const batchList = atomBatchingQueue[key];
+        atomBatchingQueue[key] = [];
+
+        const last = batchList.pop();
+        if (!last) return Promise.resolve();
+
+        return Promise.resolve(process(last)).catch((error) => {
+          console.error(`Failed to process for ${last.atom.key}:`, error);
+        });
+      });
+
+      Promise.all(promises).finally(() => {
+        processingQueueFlag = false;
+      });
+    });
+  }
 
   /**
    * Reads the current value of the provided atom or selector.
@@ -33,8 +62,12 @@ export function createStateManager(store: Store): StateManager {
       } else {
         newValue = argument;
       }
-      store.writeAtomState(atom, newValue);
-      render(atom);
+      if (!atomBatchingQueue[atom.key]) atomBatchingQueue[atom.key] = [];
+      atomBatchingQueue[atom.key].push({ atom, newValue });
+      batching((last) => {
+        store.writeAtomState(last.atom, last.newValue);
+        render(last.atom);
+      });
     };
 
     return result;
