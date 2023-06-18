@@ -13,17 +13,22 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Important: This will fetch all tags as well as commits
+
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
+
       - name: Install dependencies
         run: npm ci
+
       - name: Set up Git user
         run: |
           git config --global user.name "${{ secrets.USER_NAME }}"
           git config --global user.email "${{ secrets.USER_EMAIL }}"
+
+
       - name: Bump version, Publish and Release
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
@@ -44,8 +49,6 @@ jobs:
             NEW_VERSION=$(npm version $VERSION_BUMP) 
             echo "NEW_VERSION: $NEW_VERSION"
             cat package.json
-            git commit -am "$NEW_VERSION"
-            git push origin master
             npm run build
             npm publish
             git push --tags
