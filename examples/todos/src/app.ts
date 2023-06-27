@@ -6,7 +6,7 @@
 
 import { defaultStateManger } from "im-sang-tae";
 
-import { todoList } from "./atom";
+import { todoList } from "./atoms";
 
 const TextInput = document.getElementById("text-input") as HTMLInputElement;
 const AddButton = document.getElementById("add-button") as HTMLButtonElement;

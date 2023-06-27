@@ -1,9 +1,10 @@
+const { glob } = require("glob");
 const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
   mode: "production",
-  entry: ["./src/app.ts", "./src/atom.ts"],
+  entry: glob.sync("./src/**/*.ts").map((el) => `./${el}`),
   output: {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),

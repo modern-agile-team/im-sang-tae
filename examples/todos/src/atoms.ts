@@ -15,4 +15,7 @@ type TodoType = {
 export const todoList = defaultStore.createAtom<TodoType[]>({
   key: "todoList",
   initialState: [],
+  options: {
+    persistence: "localStorage",
+  },
 });
