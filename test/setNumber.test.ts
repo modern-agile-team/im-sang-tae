@@ -4,24 +4,24 @@
  * Created On Thu Jun 08 2023
  **/
 
-import { defaultStateManger, defaultStore } from "../src/index";
+import { atomState, createAtom, createAtomFamily } from "../src/index";
 
-const numberAtom = defaultStore.createAtom({ key: "numberAtom", initialState: 0 });
-const numberSelector = defaultStore.createAtom({
+const numberAtom = createAtom({ key: "numberAtom", initialState: 0 });
+const numberSelector = createAtom({
   key: "numberSelector",
   async get({ get }) {
     return get(numberAtom) + 1;
   },
 });
 
-const numberAtomFamily = defaultStore.createAtomFamily<number, number>({
+const numberAtomFamily = createAtomFamily<number, number>({
   key: "numberAtomFamily",
   initialState(param) {
     return 1 + param;
   },
 });
 
-const numberSelectorFamily = defaultStore.createAtomFamily<number, number>({
+const numberSelectorFamily = createAtomFamily<number, number>({
   key: "numberSelectorFamily",
   get:
     (param: number) =>
@@ -30,12 +30,10 @@ const numberSelectorFamily = defaultStore.createAtomFamily<number, number>({
     },
 });
 
-const [getNumber, setNumber] = defaultStateManger.atomState(numberAtom);
-const [getNumberWithSelector, setNumberS] = defaultStateManger.atomState(numberSelector);
-const [getNumberWithAtomFamily, setNumberWithAtomFamily] = defaultStateManger.atomState(numberAtomFamily(10));
-const [getNumberWithSelectorFamily, setNumberWithSelectorFamily] = defaultStateManger.atomState(
-  numberSelectorFamily(10)
-);
+const [getNumber, setNumber] = atomState(numberAtom);
+const [getNumberWithSelector, setNumberS] = atomState(numberSelector);
+const [getNumberWithAtomFamily, setNumberWithAtomFamily] = atomState(numberAtomFamily(10));
+const [getNumberWithSelectorFamily, setNumberWithSelectorFamily] = atomState(numberSelectorFamily(10));
 
 describe("setNumber", () => {
   beforeEach(() => {

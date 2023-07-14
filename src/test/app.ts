@@ -4,14 +4,14 @@
  * Created On Mon Jun 05 2023
  **/
 
-import { defaultStore, defaultStateManger } from "../index";
+import { createAtom, createAtomFamily, atomState, subscribe } from "../index";
 
-const atom = defaultStore.createAtom({
+const atom = createAtom({
   key: "atom",
   initialState: 1,
 });
 
-const atomWithStorage = defaultStore.createAtom({
+const atomWithStorage = createAtom({
   key: "atomWithStorage",
   initialState: 1,
   options: {
@@ -19,7 +19,7 @@ const atomWithStorage = defaultStore.createAtom({
   },
 });
 
-const atomFamily = defaultStore.createAtomFamily<number, number>({
+const atomFamily = createAtomFamily<number, number>({
   key: "atomFamily",
   initialState(param) {
     return param;
@@ -29,14 +29,14 @@ const atomFamily = defaultStore.createAtomFamily<number, number>({
   },
 });
 
-const selector = defaultStore.createAtom({
+const selector = createAtom({
   key: "selector",
   get({ get }) {
     return get(atom) + 1;
   },
 });
 
-const selectorWithStorage = defaultStore.createAtom({
+const selectorWithStorage = createAtom({
   key: "selectorWithStorage",
   get({ get }) {
     return get(atom) + 1;
@@ -46,7 +46,7 @@ const selectorWithStorage = defaultStore.createAtom({
   },
 });
 
-const selectorFamily = defaultStore.createAtomFamily<number, number>({
+const selectorFamily = createAtomFamily<number, number>({
   key: "selectorFamily",
   get:
     (param) =>
@@ -58,13 +58,13 @@ const selectorFamily = defaultStore.createAtomFamily<number, number>({
   },
 });
 
-const [getAtom, setAtom] = defaultStateManger.atomState(atom);
-const [getAtomWithStorage, setAtomWithStorage] = defaultStateManger.atomState(atomWithStorage);
-const [getAtomFamily, setAtomFamily] = defaultStateManger.atomState(atomFamily(10));
+const [getAtom, setAtom] = atomState(atom);
+const [getAtomWithStorage, setAtomWithStorage] = atomState(atomWithStorage);
+const [getAtomFamily, setAtomFamily] = atomState(atomFamily(10));
 
-const [getSelector, setSelector] = defaultStateManger.atomState(selector);
-const [getSelectorWithStorage, setSelectorWithStorage] = defaultStateManger.atomState(selectorWithStorage);
-const [getSelectorFamily, setSelectorFamily] = defaultStateManger.atomState(selectorFamily(10));
+const [getSelector, setSelector] = atomState(selector);
+const [getSelectorWithStorage, setSelectorWithStorage] = atomState(selectorWithStorage);
+const [getSelectorFamily, setSelectorFamily] = atomState(selectorFamily(10));
 
 const AtomText = document.createElement("p");
 const AtomWithStorageText = document.createElement("p");
@@ -154,7 +154,7 @@ SelectorFamilyButton.onclick = () => {
   setSelectorFamily((prev) => prev + 1);
 };
 
-defaultStateManger.subscribe([atom, atomWithStorage, atomFamily, selector, selectorWithStorage, selectorFamily], () => {
+subscribe([atom, atomWithStorage, atomFamily, selector, selectorWithStorage, selectorFamily], () => {
   AtomText.innerText = `atom => ${getAtom()}`;
   AtomWithStorageText.innerText = `atomWithStorage => ${getAtomWithStorage()}`;
   AtomFamilyText.innerText = `atomFamily => ${getAtomFamily()}`;
