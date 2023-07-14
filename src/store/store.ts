@@ -260,3 +260,4 @@ export function createStore(): Store {
 }
 
 export const defaultStore = createStore();
+export const { createAtom, createAtomFamily, readAtomState, readAtomValue, writeAtomState } = defaultStore;

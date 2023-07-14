@@ -128,3 +128,4 @@ export function createStateManager(store: Store): StateManager {
 }
 
 export const defaultStateManger = createStateManager(defaultStore);
+export const { atomState, atomValue, setAtomState, subscribe } = defaultStateManger;
