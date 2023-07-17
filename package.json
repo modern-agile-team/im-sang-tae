@@ -4,13 +4,23 @@
   "type": "module",
   "scripts": {
     "test": "jest",
+    "init": "for d in ./packages/*/ ; do (cd \"$d\" && npm install); done",
+
     "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
     "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done",
     "update:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm update); done",
+
     "build:vanilla": "cd ./packages/vanilla; npm run build",
     "publish:vanilla": "cd ./packages/vanilla; npm publish",
     "unpublish:vanilla": "cd ./packages/vanilla; npm unpublish",
-    "version:vanilla": "cd ./packages/vanilla; npm version"
+    "version:vanilla": "cd ./packages/vanilla; npm version",
+    "test:vanilla": "cd ./packages/vanilla; npm run test",
+
+    "build:react": "cd ./packages/react; npm run build",
+    "publish:react": "cd ./packages/react; npm publish",
+    "unpublish:react": "cd ./packages/react; npm unpublish",
+    "version:react": "cd ./packages/react; npm version",
+    "test:react": "cd ./packages/vanilla; npm run test"
   },
   "devDependencies": {
     "@types/jest": "^29.5.3",

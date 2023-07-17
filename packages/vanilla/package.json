@@ -8,7 +8,7 @@
     "type": "module",
     "scripts": {
       "types": "tsc --emitDeclarationOnly",
-      "build": "npm run types && rollup -c",
+      "build": "rm -rf dist && npm run types && rollup -c",
       "start": "rollup -c -w",
       "test": "jest",
       "start:localTest": "cd src/test && npm run start",
