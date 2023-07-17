@@ -1,7 +1,8 @@
 {
-  "name": "frontend-state-management-library", 
-  "description": "state management library that are not dependent on the framework", 
-  "scripts": { 
+  "name": "global-state-management-library",
+  "description": "state management library that are not dependent on the framework",
+  "type": "module",
+  "scripts": {
     "test": "jest",
     "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
     "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done",
@@ -11,15 +12,12 @@
     "unpublish:vanilla": "cd ./packages/vanilla; npm unpublish",
     "version:vanilla": "cd ./packages/vanilla; npm version"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/modern-agile-team/im-sang-tae.git"
-  },
-  "keywords": [
-    "state",
-    "global",
-    "manager",
-    "javascript",
-    "frontend"
-  ]
+  "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.1.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.5.2",
+    "typescript": "^5.1.6"
+  }
 }
