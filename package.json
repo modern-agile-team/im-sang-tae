@@ -1,21 +1,22 @@
 {
-  "name": "global-state-management-library",
+  "name": "im-sang-tae",
   "description": "state management library that are not dependent on the framework",
   "type": "module",
+  "workspaces": [
+    "packages/vanilla",
+    "packages/react"
+  ],
   "scripts": {
     "test": "jest",
     "init": "for d in ./packages/*/ ; do (cd \"$d\" && npm install); done",
-
     "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
     "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done",
     "update:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm update); done",
-
     "build:vanilla": "cd ./packages/vanilla; npm run build",
     "publish:vanilla": "cd ./packages/vanilla; npm publish",
     "unpublish:vanilla": "cd ./packages/vanilla; npm unpublish",
     "version:vanilla": "cd ./packages/vanilla; npm version",
     "test:vanilla": "cd ./packages/vanilla; npm run test",
-
     "build:react": "cd ./packages/react; npm run build",
     "publish:react": "cd ./packages/react; npm publish",
     "unpublish:react": "cd ./packages/react; npm unpublish",
@@ -29,5 +30,6 @@
     "ts-node": "^10.9.1",
     "tslib": "^2.5.2",
     "typescript": "^5.1.6"
-  }
+  },
+  "packageManager": "yarn@3.6.1"
 }
