@@ -7,7 +7,7 @@
     "type": "module",
     "scripts": {
         "types": "tsc --emitDeclarationOnly",
-        "build": "rm -rf dist && npm run types && rollup -c",
+        "build": "rm -rf dist && yarn types && rollup -c",
         "start": "rollup -c -w",
         "test": "jest"
     },
