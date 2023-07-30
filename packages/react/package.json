@@ -23,8 +23,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@babel/runtime": "^7.14.8",
-    "vanilla": "1.0.3"
+    "@babel/runtime": "^7.14.8"
   },
   "devDependencies": {
     "@babel/core": "^7",
