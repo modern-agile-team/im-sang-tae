@@ -5,8 +5,8 @@ They are designed to provide a simple and intuitive API for managing state in an
 
 ## Packages
 
-[@im-sang-tae/vanilla](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/vanilla).
-[@im-sang-tae/react](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/react).
+[@im-sang-tae/vanilla](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/vanilla) <br>
+[@im-sang-tae/react](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/react)
 
 ## License
 
