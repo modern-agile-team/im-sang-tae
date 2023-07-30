@@ -1,33 +1,34 @@
 {
-  "name": "global-state-management-library",
+  "name": "im-sang-tae",
   "description": "state management library that are not dependent on the framework",
   "type": "module",
+  "workspaces": [
+    "packages/vanilla",
+    "packages/react"
+  ],
   "scripts": {
     "test": "jest",
-    "init": "for d in ./packages/*/ ; do (cd \"$d\" && npm install); done",
-
-    "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm run build); done",
-    "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm install); done",
-    "update:examples": "for d in ./examples/*/ ; do (cd \"$d\" && npm update); done",
-
-    "build:vanilla": "cd ./packages/vanilla; npm run build",
-    "publish:vanilla": "cd ./packages/vanilla; npm publish",
-    "unpublish:vanilla": "cd ./packages/vanilla; npm unpublish",
-    "version:vanilla": "cd ./packages/vanilla; npm version",
-    "test:vanilla": "cd ./packages/vanilla; npm run test",
-
-    "build:react": "cd ./packages/react; npm run build",
-    "publish:react": "cd ./packages/react; npm publish",
-    "unpublish:react": "cd ./packages/react; npm unpublish",
-    "version:react": "cd ./packages/react; npm version",
-    "test:react": "cd ./packages/vanilla; npm run test"
+    "init": "for d in ./packages/*/ ; do (cd \"$d\" && yarn install); done",
+    "build:examples": "for d in ./examples/*/ ; do (cd \"$d\" && yarn build); done",
+    "build:vanilla": "cd ./packages/vanilla; yarn build",
+    "build:react": "cd ./packages/react; yarn build",
+    "build:all": "yarn build:vanilla && yarn build:react",
+    "install:examples": "for d in ./examples/*/ ; do (cd \"$d\" && yarn install); done",
+    "update:examples": "for d in ./examples/*/ ; do (cd \"$d\" && yarn update); done",
+    "publish:vanilla": "cd ./packages/vanilla; yarn publish",
+    "publish:react": "cd ./packages/react; yarn publish",
+    "unpublish:vanilla": "cd ./packages/vanilla; yarn unpublish",
+    "unpublish:react": "cd ./packages/react; yarn unpublish",
+    "version:vanilla": "cd ./packages/vanilla; yarn version",
+    "version:react": "cd ./packages/react; yarn version",
+    "test:vanilla": "cd ./packages/vanilla; yarn test",
+    "test:react": "cd ./packages/vanilla; yarn test"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.3",
     "@types/node": "^20.1.1",
-    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "tslib": "^2.5.2",
     "typescript": "^5.1.6"
-  }
+  },
+  "packageManager": "yarn@3.6.1"
 }
