@@ -4,7 +4,7 @@
  * Created On Thu Jun 08 2023
  **/
 
-import { atomState, createAtom, createAtomFamily } from "../packages/vanilla/src";
+import { atomState, createAtom, createAtomFamily } from "../src";
 
 const numberAtom = createAtom({ key: "numberAtom", initialState: 0 });
 const numberSelector = createAtom({
