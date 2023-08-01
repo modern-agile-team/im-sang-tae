@@ -1,4 +1,3 @@
-//@ts-nocheck
 /**
  * Author: SoonKi Min (alstnsrl98@gmail.com)
  * License: MIT
