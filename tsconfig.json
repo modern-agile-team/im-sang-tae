@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+      "target": "esnext",
+      "module": "esnext",
+      "strict": true,
+      "esModuleInterop": true, 
+      "moduleResolution": "node",
+      "allowSyntheticDefaultImports": true,
+      "allowJs": true, 
+      "forceConsistentCasingInFileNames": true,
+      "noFallthroughCasesInSwitch": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true, 
+      "baseUrl": ".",
+      "sourceMap": true,
+      "declaration": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,  
+      "types": ["jest", "node"]
+    }
+}
+  
+   
