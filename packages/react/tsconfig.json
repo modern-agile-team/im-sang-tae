@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+    "baseUrl": ".",
+      "target": "esnext",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+  
+      /* Type Checking */
+      "noFallthroughCasesInSwitch": true,
+      "noImplicitReturns": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "strict": true,
+  
+      /* Language and Environment */
+      "experimentalDecorators": true,
+      "jsx": "react-jsx",
+      "lib": ["dom", "dom.iterable", "ESNext", "ESNext.AsyncIterable"],
+  
+      /* Interop Constraints */
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+  
+      /* Emit */
+      "declaration": true,
+      "downlevelIteration": true,
+      "inlineSources": true,
+      "preserveConstEnums": true,
+      "removeComments": false,
+      "sourceMap": true,
+      "declarationDir": "./dist",  
+      /* Completeness*/
+      "allowJs": false,
+      "skipLibCheck": true,
+    },
+    "exclude": ["**/dist/*", "**/esm/*"]
+  }

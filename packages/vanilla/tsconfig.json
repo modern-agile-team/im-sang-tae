@@ -18,11 +18,13 @@
     "declarationDir": "./dist",  
     "noUnusedLocals": true,
     "noUnusedParameters": true,  
+    "types": ["jest", "node"]
   },
   "include": [
-    "./src/**/*"
+    "./src/**/*",
+    "./test/**/*"
   ],
-  "exclude": ["node_modules", "dist", "./src/test/**/*"]
+  "exclude": ["node_modules", "dist"]
 }
 
  

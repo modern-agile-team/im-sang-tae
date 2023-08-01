@@ -1,6 +1,6 @@
-# IM_SANG_TAE - A Global State Management Library
+# @im-sang-tae/vanilla - A Global State Management Library
 
-IM_SANG_TAE is a global state management library for JavaScript applications. It's designed to provide a simple and intuitive API for managing state in an efficient and scalable way.
+@im-sang-tae/vanilla is a global state management library for JavaScript applications. It's designed to provide a simple and intuitive API for managing state in an efficient and scalable way.
 
 ## Features
 
@@ -10,12 +10,13 @@ IM_SANG_TAE is a global state management library for JavaScript applications. It
 - Support for tracking dependencies between selectors.
 
 ## Installation
+
 ```bash
 # using npm
-npm install im-sang-tae
+npm install @im-sang-tae/vanilla
 
 # using yarn
-yarn add im-sang-tae
+yarn add @im-sang-tae/vanilla
 ```
 
 ## Usage
@@ -23,16 +24,16 @@ yarn add im-sang-tae
 To start using IM_SANG_TAE in your project, you need to create atoms or selectors with an initial state:
 
 ```javascript
-import { defaultStore } from "im-sang-tae";
+import { createAtom } from "@im-sang-tae/vanilla";
 
 // create atom
-const myAtom = defaultStore.createAtom({
+const myAtom = createAtom({
   key: "myAtom",
   initialState: 0,
 });
 
 // create selector
-const mySelector = defaultStore.createAtom({
+const mySelector = createAtom({
     key: "mySelector",
     get: ({get}) => {
         return get(myAtom) + 1;
@@ -43,22 +44,24 @@ const mySelector = defaultStore.createAtom({
 You can get the current state and set a new state using the atomState method from the state manager:
 
 ```javascript
-import { defaultStateManager } from "im-sang-tae";
+import { atomState, subscribe } from "@im-sang-tae/vanilla";
 
-const [getMyAtom, setMyAtom] = defaultManager.atomState(myAtom);
-const [getMySelector, setMySelector] = defaultManager.atomState(mySelector);
+const [getMyAtom, setMyAtom] = atomState(myAtom);
+const [getMySelector, setMySelector] = atomState(mySelector);
 
-defaultStateManager.subscribe(myAtom, () => {
+subscribe(myAtom, () => {
   console.log(getMyAtom());
 });
 
-defaultStateManager.subscribe(mySelector, () => {
+subscribe(mySelector, () => {
   console.log(getMySelector());
 });
 ```
 
 ## License
+
 This project is licensed under the MIT License.
 
 ## Contribute
+
 [Contribute](https://github.com/modern-agile-team/im-sang-tae/blob/master/.github/workflows/CONTRIBUTE.md).
