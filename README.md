@@ -5,8 +5,16 @@ They are designed to provide a simple and intuitive API for managing state in an
 
 ## Packages
 
-[@im-sang-tae/vanilla](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/vanilla) <br>
-[@im-sang-tae/react](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/react)
+### @im-sang-tae/vanilla
+
+[![npm version](https://badge.fury.io/js/@im-sang-tae%2Fvanilla.svg)](https://badge.fury.io/js/@im-sang-tae%2Fvanilla)
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+![license_badge](https://img.shields.io/badge/license-MIT-lightgrey) <br/>
+[vanilla](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/vanilla) <br>
+
+---
+
+[react](https://github.com/modern-agile-team/im-sang-tae/tree/develop/packages/react)
 
 ## License
 
