@@ -1,7 +1,7 @@
 /**
- * Author: SoonKi Min (alstnsrl98@gmail.com)
+ * Author: HyunWoo Park (bagh9902@gmail.com)
  * License: MIT
- * Created On Mon Jul 17 2023
+ * Created On Sun Aug 27 2023
  **/
 
 import { createStore, defaultStore, Store } from "@im-sang-tae/vanilla";
