@@ -1,10 +1,13 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-const config = {
+export default {
   preset: "ts-jest",
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transformIgnorePatterns: ["/node_modules/(?!node-fetch/.*)"],
   transform: {
-    "^.+\\.js?$": "babel-jest",
+    "^.+\\.jsx?$": "babel-jest",
+    "^.+\\.tsx?$": "ts-jest",
   },
+  setupFilesAfterEnv: ["./jest.setup.ts"],
 };
-export default config;
+
+// "type": "module",

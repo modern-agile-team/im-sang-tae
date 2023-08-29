@@ -22,7 +22,7 @@
     "version:vanilla": "cd ./packages/vanilla; yarn version",
     "version:react": "cd ./packages/react; yarn version",
     "test:vanilla": "cd ./packages/vanilla; yarn test",
-    "test:react": "cd ./packages/vanilla; yarn test"
+    "test:react": "cd ./packages/react; yarn test"
   },
   "devDependencies": {
     "@types/node": "^20.1.1",
